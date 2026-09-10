@@ -28,6 +28,7 @@
       "download": "https://github.com/someone/pet-pomodoro-plus/releases/download/1.2.0/plugin.zip",
       "sha256": "…",
       "permissions": ["storage", "pet", "scheduler"],
+      "nodeAccess": false,
       "meshTier": null
     }
   ]
@@ -45,6 +46,7 @@
 | `apiVersion` | 否 | SDK 契约版本；缺省按最低兼容版本处理 |
 | `sha256` | 是 | zip 的校验和。**宿主先校验再解压** |
 | `permissions` | 是 | 冗余登记一份 manifest 权限。**zip 内声明超出此处即拒装**（防过审后换包） |
+| `nodeAccess` | 否 | 插件是否声明直接使用 Node 内建模块（policy.md 第 1 条，2026-09-10 起的声明披露制）。缺省按 `false`；`true` 时审核要求 README 披露用途，宿主安装弹窗按最坏情况措辞展示（宿主侧展示逻辑待落地，落地前旧宿主忽略该字段） |
 | `meshTier` | 否 | 官方 relay 准入标记；`null` 表示不得使用官方 relay |
 
 ## blocklist.json（kill switch）

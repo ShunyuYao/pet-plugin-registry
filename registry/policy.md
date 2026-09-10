@@ -9,14 +9,25 @@
 
 ---
 
-## 1. 只使用声明过的能力
+## 1. 只使用声明过的能力（2026-09-10 起：声明 + 披露制）
 
-只使用 manifest 中声明的权限对应的 SDK 能力。**禁止绕过 SDK 直接访问文件系统 / 网络 / 子进程。**
+有 SDK 等价能力的一律走 `pet.*`。确需直接使用 Node 内建模块
+（`fs` / `child_process` / `net` / `http` / `https` 等）的插件，必须同时满足：
 
-审核 grep 红线（命中即人工复核，无正当理由则拒）：
+1. registry 条目标记 `nodeAccess: true`（见 SCHEMA.md）；
+2. README 显著披露**访问什么、为什么需要**（如"读取 `~/.claude` 下的会话状态文件以显示 agent 运行状态"）；
+3. 审核时人工核对代码用途与披露一致，且确认当前 SDK 无等价能力。
 
-- `require('fs')`、`require('child_process')`、`require('net')`、`require('http')`／`https`
-- 动态 `require(变量)`
+**未声明、未披露而使用 Node 内建即拒审。**
+
+用户侧后果（提交前请知悉）：标记 `nodeAccess` 的插件，安装弹窗按最坏情况措辞展示
+（"该插件将获得对你电脑的完全访问权限"），且 blocklist 禁用只能停掉经 SDK 注册的资源，
+对插件自行创建的文件/进程无回收能力。
+
+**无条件硬禁（命中即拒，无裁量）**：
+
+- 代码混淆（隐藏代码真实用途）
+- 动态拼接 `require(变量)`
 - `eval()`、`new Function()`
 
 ## 2. 禁止下载执行代码
@@ -45,7 +56,9 @@ release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（�
 ## 审核流程
 
 1. 开发者向本仓库提 PR，在 `registry/plugins.json` 增加条目。
-2. CI 自动检查：manifest 合法性、权限与 registry 登记比对、红线 grep、zip hash 复算。
+2. CI 自动检查：manifest 合法性、权限与 registry 登记比对、Node 内建 grep（命中且未标记
+   `nodeAccess` 即拒；已标记则转人工核对披露一致性）、混淆/动态 require/eval 命中即拒、
+   zip hash 复算。
 3. 人工过一遍本政策清单。
 4. merge 即上架。
 
