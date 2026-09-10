@@ -7,12 +7,18 @@
       "name": "Agent 会话状态",
       "author": "github:ShunyuYao",
       "repo": "ShunyuYao/pet-agent-status",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "minHostVersion": "0.18.0",
       "apiVersion": 1,
-      "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.1.0/plugin.zip",
-      "sha256": "4c4d9ef9805a0a0da767297e19ce97b44dd154d333b80306552e3f900921ffe6",
-      "permissions": ["storage", "pet", "ui", "events", "scheduler"],
+      "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.1.1/plugin.zip",
+      "sha256": "f2fec2ca0e2ae6b2089ef4fa7c88833a3475aa59e25489f48ba7aa859aec28a7",
+      "permissions": [
+        "storage",
+        "pet",
+        "ui",
+        "events",
+        "scheduler"
+      ],
       "nodeAccess": true,
       "meshTier": null
     }
