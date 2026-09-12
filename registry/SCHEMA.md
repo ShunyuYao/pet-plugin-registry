@@ -73,3 +73,10 @@ SDK 新方法的同步、权限与最低版本核对见 [SDK 同步与兼容核�
 1. 启动时与每日各拉一次；命中的已装插件立即禁用并展示 reason。
 2. 拉取失败用上次缓存，**不阻断启动**。
 3. **从未拉取成功时不禁用任何插件**——空 blocklist 不等于全部拉黑。
+
+## 主动更新提醒的参与权威
+
+参与开关为本机已安装 manifest 的可选 `updateReminders: boolean`（实验）。
+缺省 false；只有 true 才参与，远端 plugins.json 不得代替已安装插件开启。
+现有 version/download/sha256/permissions/minHostVersion/apiVersion 字段承载候选与校验信息；
+此功能不新增 registry 开关、不升级 schemaVersion。关闭参与仍保留手动市场更新。
