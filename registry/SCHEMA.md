@@ -3,6 +3,9 @@
 宿主按本文件读取 `plugins.json` 与 `blocklist.json`。**改这两个文件的结构等于改契约**，
 必须同步宿主端解析代码与 `demo/tests/` 下的相关测试。
 
+SDK 新方法的同步、权限与最低版本核对见 [SDK 同步与兼容核对](SDK.md)。
+本表不登记每个 SDK 方法；仅文档/类型补全不需要升级 registry schema。
+
 拉取地址（宿主端两源，主源失败自动兜底）：
 
 - 主源 `https://raw.githubusercontent.com/ShunyuYao/pet-plugin-registry/main/registry/<file>`

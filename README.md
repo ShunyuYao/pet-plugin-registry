@@ -9,6 +9,7 @@ registry/
   blocklist.json   黑名单（kill switch）
   policy.md        开发者政策 / 审核对照表
   SCHEMA.md        两份 JSON 的字段语义（改结构 = 改契约）
+  SDK.md           SDK 同步、权限与最低宿主版本核对
 ```
 
 ## 提交插件
@@ -26,5 +27,7 @@ registry/
 
 ## 状态
 
-初始化中，尚未开放提交。宿主端市场功能开发中；对外开放还需先完成 SDK 契约冻结
-（见宿主仓库 `docs/plugin-open-platform-design.md` §3）。
+已有插件登记条目；当前清单以 [`plugins.json`](registry/plugins.json) 为准。
+SDK `apiVersion: 1` 包含已冻结与实验能力，完整定义见
+[pet-plugin-types](https://github.com/ShunyuYao/pet-plugin-types)。
+SDK 变更交付必须完成[同步与兼容核对](registry/SDK.md)，不能把外部类型对账的 SKIP 当作通过。
