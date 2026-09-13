@@ -75,3 +75,12 @@ release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（�
 用户可在桌宠"开发者模式"下从本地目录旁加载插件。**旁加载不经任何审核**，
 宿主会向用户展示最坏情况警告。这条路径供开发者调试自己的插件使用；
 分发给他人请走 registry。
+
+
+## 插件账号授权审核（新实验能力，待支持版本发布）
+
+- 只可使用已登记的 `account:authorize:<serviceId>`，README 披露目标服务、验证身份的用途及上传的公开资料 / 成绩；不能借用别的服务授权或把 UID 当作登录凭据。
+- `account.getState` / `account.authorize` 仅 tool；宿主 access / refresh token 不得暴露给插件、页面或服务后端，禁止读取宿主账号文件来绕过 SDK。
+- 一次性码绑定目标服务、每次独立挑战与 S256 PKCE，禁止重用；游戏会话只保存在 tool 内存，不发到 panel、通用事件总线或日志。无需长期保存的密钥不落盘；确有持久化必要时仍遵守 secrets 政策。
+- 登录变化、停用、卸载或崩溃后停止旧身份请求并丢弃迟到结果；服务端每次受保护操作验证父账号授权。只有账号服务成功确认登出才保证立即失效；离线登出或撤销请求失败时，本机立即停用、服务端最长 10 分钟的撤销延迟必须如实说明。
+- 声明对应网络域名，核对真实最低宿主版本和服务端支持；此能力未发布前不能将依赖它的插件登记为对旧宿主可用。Account verification must never expose host credentials, bypass public SDK boundaries, or claim support based only on API documentation.
