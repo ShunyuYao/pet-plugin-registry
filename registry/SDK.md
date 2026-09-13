@@ -77,3 +77,18 @@ SKIP；这种结果不能当作 SDK 已完成同步的证据。应记录：三�
 新增 `account.getState` / `account.authorize`，仅 tool，可用前提是目标宿主与账号服务均支持，并登记了对应 serviceId。权限为 `account:authorize:<serviceId>`；同一 apiVersion 1 不代表旧宿主已有此能力。当前最低已发布支持版本尚未确定，不能据文档更新提高兼容承诺。
 
 三仓同步：类型包提供状态 / 一次性码类型、权限及编译断言；脚手架更新矩阵但不自动申请新权限；本仓增加审核规则。这次没有游戏插件发布包，不改 plugins.json 的版本、下载和摘要。All three public repositories must be checked for each SDK change, with an explicit reason for every unchanged surface. Public synchronization is not evidence of a released host or deployed account service.
+
+## 插件外观 / Plugin appearance（experimental，尚未发布）
+
+`pet.appearance.getState()`、`apply()`、`reset()` 仅 tool/panel 可用，要求已激活的 asset 插件声明并获准 `appearance` 权限；面板另需 `ui` 权限和 panel 入口。基础模板不自动申请这些权限。
+
+返回 `companion: {key,name}`、`current: {key,name,isDefault,ownedByCaller}`、`own: {key,name}`、`canRestore`。查询不修改状态；面板打开期间刷新状态并丢弃迟到响应。`apply()` 只使用本插件注册的素材，保留当前伙伴身份、名字、人设与记忆，重启保留选择。`reset()` 只在本插件外观仍生效时恢复原伙伴外观；用户已换为 B 插件时 A 的 reset 不改变 B，也不恢复之前的其他插件外观。
+
+All three methods take no arguments and return `Promise<AppearanceState>`. They expose no host configuration, memory, credentials or disk paths. Successful apply/reset acknowledges a persisted selection; the renderer paints asynchronously. A failed write rejects with `persistence_failed` and restores the in-memory selection. Installation and local preview must not silently apply a skin. Closing a panel preserves the selection; removing or disabling the active asset restores the companion's original appearance.
+
+Errors in `Error.message`: `permission_denied`, `unsupported_context`, `appearance_unavailable`, `plugin_inactive`, `invalid_request`, `method_not_found`, `persistence_failed`. Only the owning active asset can change its appearance; dashboard blocks have no appearance API. Handle errors visibly and offer retry.
+
+当前新增接口尚未发布，`apiVersion: 1` 不能代表旧宿主已支持；先探测 `pet.appearance?.getState`，缺失时提示需支持该功能的测试版本。最低发布版本待真实构建验证，不能虚填 `minHostVersion`。These local source changes are not a published host or npm release.
+
+
+本轮仅同步 SDK 与政策；没有公开插件发布包，不修改 plugins.json、版本、下载与摘要。类型包对账必须包含新增三方法；脚手架基础模板仍仅使用冻结能力。
