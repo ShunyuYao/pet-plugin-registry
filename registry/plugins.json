@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-12",
+  "updatedAt": "2026-09-13",
   "plugins": [
     {
       "id": "pet-agent-status",
@@ -20,6 +20,50 @@
         "scheduler"
       ],
       "nodeAccess": true,
+      "meshTier": null
+    },
+    {
+      "id": "feishu",
+      "name": "飞书",
+      "author": "github:ShunyuYao",
+      "repo": "ShunyuYao/pet-plugin-feishu",
+      "version": "1.1.0",
+      "minHostVersion": "0.21.0",
+      "apiVersion": 1,
+      "download": "https://github.com/ShunyuYao/pet-plugin-feishu/releases/download/v1.1.0/plugin.zip",
+      "sha256": "6c3293cf32d61b1e652ca0d886dc459b6d8515822b32c7345b3c4dfeb742b9eb",
+      "permissions": [
+        "net:open.feishu.cn",
+        "net:accounts.feishu.cn",
+        "net:passport.feishu.cn",
+        "secrets",
+        "scheduler",
+        "auth-window",
+        "pet",
+        "tools",
+        "calendar-provider",
+        "host:feishu"
+      ],
+      "nodeAccess": false,
+      "meshTier": null
+    },
+    {
+      "id": "super-clipboard",
+      "name": "超级剪贴板",
+      "author": "github:ShunyuYao",
+      "repo": "ShunyuYao/pet-plugin-super-clipboard",
+      "version": "1.1.0",
+      "minHostVersion": "0.21.0",
+      "apiVersion": 1,
+      "download": "https://github.com/ShunyuYao/pet-plugin-super-clipboard/releases/download/v1.1.0/plugin.zip",
+      "sha256": "18460e8b072245f34577507a5671d73b69f31a76603b202b020914d67c72a58e",
+      "permissions": [
+        "clipboard",
+        "ui",
+        "errands",
+        "storage"
+      ],
+      "nodeAccess": false,
       "meshTier": null
     }
   ]

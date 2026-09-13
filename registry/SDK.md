@@ -60,3 +60,13 @@ SKIP；这种结果不能当作 SDK 已完成同步的证据。应记录：三�
 
 发布顺序：先保证宿主实际支持，再同步类型包与文档，最后更新消费方及必要的市场条目。
 仅在本地完成修改不等于 GitHub 已更新；维护者推送后应通过 GitHub API 回读核对实际文件。
+
+## 飞书与超级剪贴板独立市场发布（2026-09-13）
+
+两插件 v1.1.0 要求宿主 0.21.0+：旧宿主中同名内置插件占位，不能用 apiVersion=1 推断可安装。宿主正式安装包另行发布；本登记不表示旧客户端已经支持它们。
+
+飞书使用单独授权的 `host:feishu` 迁移兼容能力，仍然是外部、可卸载插件，不因官方登记自动取得权限。该能力是对既有 C 档接口的有限兼容开放，不进入通用 `pet-plugin-types` 根 SDK：仅工具进程、id=feishu、manifest 声明且用户同意时提供。只可访问 config.feishu、飞书登录进度/状态、白名单 host 导出和旧 feishu-token.json 的加密迁移；auth-window、secrets、pet 和各 net 域仍需独立授权。OAuth 窗只允许声明并授予的 open.feishu.cn、accounts.feishu.cn、passport.feishu.cn HTTPS 导航；异常退出与卸载强制销毁所属窗口。不能据此为任意市场插件开放 host/auth 或其他宿主配置。
+
+超级剪贴板使用现有公共 clipboard/ui/errands/storage API，安装前如实说明持续剪贴板采集；卸载停止采集。两插件 `nodeAccess: false`，运行代码无直接 Node 系统访问。源码公开供审核，当前各仓库未授予独立开源再分发许可；第三方字体按其 OFL 单独保留授权。
+
+发布资产由各自公开 GitHub Actions 生成，登记前下载复算 SHA-256，并与本地验收包逐字节比对。宿主真实市场安装路径、授权拒绝/同意、面板/Provider、新进程持久化和卸载已用隐藏隔离实例验证；真实飞书账号授权仍需人工验收。
