@@ -93,3 +93,11 @@ release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（�
 - 核对素材来源、实际包内容、最低宿主版本与构建证据；新接口尚未发布时不得登记为旧宿主可用。
 
 Appearance access is owner-scoped, not general host configuration access. Review explicit application, live state, error handling and cleanup. Documentation or apiVersion 1 alone does not prove released host support.
+
+
+### 可选动画素材（未发布扩展）
+
+- 动作查询/播放需披露 `pet` 权限；不得把 `playAnim` 的分发成功宣传为播放完成，也不得宣称能操控远程访客。
+- 跨机仅接受标准白名单 PNG 帧和版本化动画描述；保持尺寸、帧数、字节与解码预算限制，不附带脚本、HTML、远程 URL 或本地路径。扩展接收端不支持时须在出发前呈现失败。
+- Animation query/playback requires the pet permission. Dispatch acknowledgement is not playback completion. Appearance transfer contains validated PNG data and versioned metadata only, never executable plugin code; resource limits and version negotiation remain mandatory.
+- 本轮无新公开插件包及宿主构建，市场条目、下载摘要及最低支持版本不变。No package is being published or listed by this documentation change.
