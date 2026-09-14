@@ -84,3 +84,20 @@ release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（�
 - 一次性码绑定目标服务、每次独立挑战与 S256 PKCE，禁止重用；游戏会话只保存在 tool 内存，不发到 panel、通用事件总线或日志。无需长期保存的密钥不落盘；确有持久化必要时仍遵守 secrets 政策。
 - 登录变化、停用、卸载或崩溃后停止旧身份请求并丢弃迟到结果；服务端每次受保护操作验证父账号授权。只有账号服务成功确认登出才保证立即失效；离线登出或撤销请求失败时，本机立即停用、服务端最长 10 分钟的撤销延迟必须如实说明。
 - 声明对应网络域名，核对真实最低宿主版本和服务端支持；此能力未发布前不能将依赖它的插件登记为对旧宿主可用。Account verification must never expose host credentials, bypass public SDK boundaries, or claim support based only on API documentation.
+
+## 插件外观审核（实验能力，0.23.0 测试构建）
+
+- `appearance` 仅授权活动 asset 插件在 tool/panel 查询外观、应用自身素材及撤销自身当前外观；不得指定其他插件素材、读取宿主配置或改变伙伴身份与记忆。
+- 安装和预览不自动换装，使用需明确操作；关闭面板保留选择，停用/卸载当前素材后恢复原伙伴。A 不得撤掉后来启用的 B 外观，也不得用旧状态覆盖用户的新选择。
+- 披露所需 `appearance` 与 `ui` 权限；失败明确呈现，保存失败不能宣称成功。面板持续更新使用状态，避免仅启动时查询一次。
+- 核对素材来源、实际包内容、最低宿主版本与构建证据；新接口尚未发布时不得登记为旧宿主可用。
+
+Appearance access is owner-scoped, not general host configuration access. Review explicit application, live state, error handling and cleanup. Documentation or apiVersion 1 alone does not prove released host support.
+
+
+### 可选动画素材（0.23.0 测试构建）
+
+- 动作查询/播放需披露 `pet` 权限；不得把 `playAnim` 的分发成功宣传为播放完成，也不得宣称能操控远程访客。
+- 跨机仅接受标准白名单 PNG 帧和版本化动画描述；保持尺寸、帧数、字节与解码预算限制，不附带脚本、HTML、远程 URL 或本地路径。扩展接收端不支持时须在出发前呈现失败。
+- Animation query/playback requires the pet permission. Dispatch acknowledgement is not playback completion. Appearance transfer contains validated PNG data and versioned metadata only, never executable plugin code; resource limits and version negotiation remain mandatory.
+- 刀盾小狗使用公开 CI 构建发布包，市场最低宿主版本为经本地 macOS arm64 安装包验证的 0.23.0。此次登记不代表宿主公开发布或生产中转已经部署；宿主仍通过受邀测试渠道分发。The plugin release is built by public CI. Its minimum host version is 0.23.0, verified using a local macOS arm64 compatibility package; listing does not announce public host distribution or production relay deployment.
