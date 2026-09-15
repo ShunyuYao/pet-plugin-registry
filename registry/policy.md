@@ -101,3 +101,10 @@ Appearance access is owner-scoped, not general host configuration access. Review
 - 跨机仅接受标准白名单 PNG 帧和版本化动画描述；保持尺寸、帧数、字节与解码预算限制，不附带脚本、HTML、远程 URL 或本地路径。扩展接收端不支持时须在出发前呈现失败。
 - Animation query/playback requires the pet permission. Dispatch acknowledgement is not playback completion. Appearance transfer contains validated PNG data and versioned metadata only, never executable plugin code; resource limits and version negotiation remain mandatory.
 - 刀盾小狗使用公开 CI 构建发布包，市场最低宿主版本为经本地 macOS arm64 安装包验证的 0.23.0。此次登记不代表宿主公开发布或生产中转已经部署；宿主仍通过受邀测试渠道分发。The plugin release is built by public CI. Its minimum host version is 0.23.0, verified using a local macOS arm64 compatibility package; listing does not announce public host distribution or production relay deployment.
+
+
+### Arrival voice assets / 入场配音素材
+
+带配音的外观插件需声明经过实际构建验证的最低宿主版本，核对声音素材来源与授权说明。仅允许宿主 v3 支持的有界 PCM WAV，音频不得通过远端 URL 或插件代码绕过外观校验。审核说明不得包含宿主公开下载入口。
+
+Appearance plugins with voice must declare a build-verified minimum host version and document audio provenance and rights. Only bounded PCM WAV supported by appearance v3 is permitted; remote URLs and plugin code must not bypass asset validation. Public review materials must not expose host download locations.
