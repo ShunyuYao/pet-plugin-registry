@@ -74,7 +74,7 @@
       "version": "0.6.0",
       "minHostVersion": "0.24.0",
       "apiVersion": 1,
-      "download": "https://github.com/ShunyuYao/pet-plugin-sword-shield/releases/download/v0.6.0/plugin.zip",
+      "download": "https://cdn.jsdelivr.net/gh/ShunyuYao/pet-plugin-sword-shield@7abd402aac6180eb153e6e887ef37979068ff3ae/plugin.zip",
       "sha256": "a01399d4954f2ff4130519b951d1fa9ce26d6efa3931325465d1d88810ea9655",
       "permissions": [
         "ui",
