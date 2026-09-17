@@ -108,3 +108,13 @@ Appearance access is owner-scoped, not general host configuration access. Review
 带配音的外观插件需声明经过实际构建验证的最低宿主版本，核对声音素材来源与授权说明。仅允许宿主 v3 支持的有界 PCM WAV，音频不得通过远端 URL 或插件代码绕过外观校验。审核说明不得包含宿主公开下载入口。
 
 Appearance plugins with voice must declare a build-verified minimum host version and document audio provenance and rights. Only bounded PCM WAV supported by appearance v3 is permitted; remote URLs and plugin code must not bypass asset validation. Public review materials must not expose host download locations.
+
+## 纯数据主题审核 / Data-only theme review (unreleased)
+
+主题包只允许 theme 种类、ui:theme 权限、JSON 入口。审核实际内容，拒绝代码入口、服务声明、任意 CSS、外部资源 URL 和路径越界。核对六字段、十五项 #RRGGBB 颜色、0–28 整数圆角、plain/paper/grid 装饰及 16 KiB 上限；确保文字、文件、输入、错误与选中状态可读。
+
+Review actual package contents: only the theme kind, ui:theme permission and JSON entry are accepted. Reject executable/service declarations, arbitrary CSS, external resource URLs and escaping paths. Check exact fields, fifteen colors, bounded radii, texture presets, the 16 KiB limit, and readability of all user states.
+
+安装不自动应用；选择、默认恢复、草稿保留、重启、停用和卸载须有真实宿主证据。当前未发布，类型或文档变化不能证明旧宿主支持；实际宿主构建与类型/脚手架交付通过前，不登记虚构支持版本、下载包或摘要。本轮 plugins.json 不变。
+
+Installation must not take over the current appearance. Selection, reset, draft preservation, restart and disable/removal require real host evidence. The capability is unreleased: docs alone cannot establish compatibility or justify marketplace metadata. This change does not add a registry entry or a host download link.

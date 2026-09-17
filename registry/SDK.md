@@ -118,3 +118,21 @@ Cross-machine appearance v2 permits the fourteen listed states with explicit loo
 宿主 0.24.0 增加可选 character.json `arrivalAudio: {"file":"arrival.wav","repeats":2,"gapMs":180}`。仅普通站定入场，声音播放结束后进入 greet，拖动/召回终止；探头不播。file 仅根目录英文文件名 WAV，单声道 PCM16 16kHz、单次最多 2 秒、1–2 次、间隔 0–500ms。数据随外观 v3 描述传输并参与 SHA256 和资源上限，不能携带代码或外部音频 URL。两端均需支持 v3，否则出发前明确失败。接收方无需安装发起方插件。未增加 SDK 方法或权限。
 
 Host 0.24.0 adds optional arrivalAudio metadata. Normal arrival plays the bounded PCM voice before greet; drag and recall cancel it, edge peek does not play it. Both peers must support appearance v3. Inline audio participates in the content hash and the existing descriptor/aggregate limits; no executable code or remote audio URL is accepted. Existing v1/v2 packs remain compatible. No SDK method or permission was added. Host distribution remains invitation-only.
+
+## 聊天主题包 v1 / Chat themes (experimental, unreleased)
+
+本节描述开发分支的格式，最低已发布宿主版本尚未确定，不能据类型或文档更新宣称既有宿主支持。主题包由用户在设置中选择，安装不会自动应用，不读取聊天内容，不运行主题脚本，不增加 tool/panel/block 方法。
+
+This data-only format is experimental and unreleased. No released host compatibility is claimed. Installing registers a choice; the user selects it in host settings. Themes cannot read chat content or execute code, and add no SDK methods. Raw ui.injectStyle remains closed.
+
+manifest 使用 kind: ['theme']、permissions: ['ui:theme']，entry 仅有 theme 字段，值为包内相对路径（推荐 theme.json）。不接受其他入口、services、provides 或 activation。
+
+Only the theme kind and ui:theme permission are accepted; entry contains only a relative theme path. Service, activation and executable entry declarations are rejected.
+
+主题 JSON 精确包含 schemaVersion: 1、target: 'chat'、colors、radius、bubbleRadius、texture 六个字段，最多 16 KiB。colors 必须提供 canvas、panel、ink、muted、surface、card、line、accent、accentInk、tint、success、error、errorSurface、file、fileInk，每值为 #RRGGBB。两个圆角为 0–28 整数，texture 为 plain / paper / grid。未知字段、脚本、任意 CSS、URL、越界路径均拒绝。
+
+JSON has exactly six fields and fifteen #RRGGBB color slots, integer radii 0–28, and a plain/paper/grid texture preset. The host enforces the 16 KiB limit, exact values and path containment. TypeScript checks do not replace runtime validation.
+
+切换保留草稿和会话，重启恢复有效选择；卸载、停用或失效恢复默认并解释原因，重新安装不自动选中。保存失败保留现有选择，包更新失败保留之前可用版本。
+
+Switching preserves drafts and conversation state. Valid choices survive restart. Removal, disabling or invalidation restores the default with a reason; reinstalling does not automatically select the package. Failed selection writes keep the current choice; failed updates retain the previous working version.
