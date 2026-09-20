@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-09-18",
+  "updatedAt": "2026-09-20",
   "plugins": [
     {
       "id": "pet-agent-status",
       "name": "Agent 会话状态",
       "author": "github:ShunyuYao",
       "repo": "ShunyuYao/pet-agent-status",
-      "version": "0.12.6",
+      "version": "0.13.0",
       "minHostVersion": "0.19.0",
       "apiVersion": 1,
-      "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.12.6/plugin.zip",
-      "sha256": "2e53b477a92440dbb855536d6c928a79cc7e4b137b3364d6f2e0a96bcf90e7ef",
+      "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.13.0/plugin.zip",
+      "sha256": "b9e88357a59ce5b771eebc76c12badc1eec50c68b9f8655ca80ee3a5fab36e27",
       "permissions": [
         "storage",
         "pet",
