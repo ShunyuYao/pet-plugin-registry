@@ -118,3 +118,16 @@ Review actual package contents: only the theme kind, ui:theme permission and JSO
 安装不自动应用；选择、默认恢复、草稿保留、重启、停用和卸载须有真实宿主证据。当前未发布，类型或文档变化不能证明旧宿主支持；实际宿主构建与类型/脚手架交付通过前，不登记虚构支持版本、下载包或摘要。本轮 plugins.json 不变。
 
 Installation must not take over the current appearance. Selection, reset, draft preservation, restart and disable/removal require real host evidence. The capability is unreleased: docs alone cannot establish compatibility or justify marketplace metadata. This change does not add a registry entry or a host download link.
+
+
+## 实时形象审核 / Realtime appearance review（M1b 候选，未发布）
+
+- 公共 renderer 包和个人 asset 包分开审核。前者只含公共渲染代码与模型；照片及个人参数必须留在个人包，不因授权发布 renderer 而公开个人素材。
+- renderer 必须仅声明 appearance-renderer kind、appearance:render 权限，以及包内 HTML 入口与真实支持的桥/数据版本。本期桥版本 apiVersion 为 1；dataVersions 是 1–64 项不重复的正安全整数，由 renderer 定义。声明示例为 `entry.renderer:{src,apiVersion:1,dataVersions:[1]}`；不得附带 tool/panel/service 入口、申请额外通用权限、下载执行远端代码或自行选择目标宠物。
+- asset 的 realtime 声明只能引用本地已安装提供者。data/assets 使用 character.json 相对路径；校验真实路径与软链接边界。data JSON 上限 64 KiB；最多 32 项资源，单项 16 MiB、总计 64 MiB，类型限 png/jpg/jpeg/webp/json/glb/bin。单张图片每边最多 8192 像素、总像素最多 16 × 1024²；资源只作为数据读取，不能用 JSON、模型依赖或纹理路径绕过代码/网络限制。
+- 渲染上下文只获得绑定会话、不可变数据及资源句柄。不得申请宿主目录、凭据、全局鼠标监听或另一主宠/访客的身份。appearance 与 character:read 均不能替代 appearance:render 授权。
+- 实测首帧就绪、有界帧通道、无效帧不保活、透明命中、抓取结束后继续渲染、异常回退。刷新同 key、切换形象、禁用/卸载任一包、关闭目标、出发及显示器变化必须回收旧会话；旧帧与通知不能恢复已结束会话。面板关闭不能意外终止渲染。
+- 安装不能自动换装。没有兼容 renderer 时本机使用普通动作并提供可识别状态；不可将配置 ready 或 IPC 发送成功当作显示完成。
+- 核对实际类型、上下文、权限、包内容和构建证据。当前能力未发布，不登记虚构最低宿主版本、下载 URL、摘要或市场版本，不公开测试宿主下载入口。
+
+Review executable renderer code separately from personal appearance data. Enforce package-local, bounded resources and session ownership; no remote code execution, arbitrary pet targeting or general SDK access is granted. Test actual frames and cleanup rather than relying on dispatch success. This M1b candidate supports local rendering only; existing appearance transfer remains unchanged. A future visitor implementation must negotiate compatible locally installed code and prepare validated data before departure, never install or execute code received from a peer automatically.
