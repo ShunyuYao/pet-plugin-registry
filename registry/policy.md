@@ -139,3 +139,16 @@ Review executable renderer code separately from personal appearance data. Enforc
 2026-09-22 验证状态：私有 macOS arm64 候选的真实签名 ASAR 完成 168 项隐藏端到端检查；两个独立 Mac 经虚拟局域网完成 153 项检查，覆盖双向来访、轻放/抛出、召回、重启和缺 provider 回退。不是物理 Wi-Fi 广播、Windows、原生焦点/穿透或公开发布的证明。未新增能力或最低已发布宿主版本；个人素材不随这些公开仓库分发。
 
 Validation status (2026-09-22): a private macOS arm64 signed-ASAR candidate passed 168 hidden E2E checks; two separate Macs passed 153 checks over a virtual LAN, including both visit directions, placement/throwing, recall, restart and missing-provider fallback. This does not establish physical Wi-Fi broadcast, Windows, native focus/passthrough or a public release. No API or minimum released host version is added, and personal assets are not distributed by these public repositories.
+
+
+### 独立布偶套件 0.2.0 / Independent provider release
+
+`rat-doll-renderer` 0.2.0 以独立公开仓库及 CI ZIP 发布，只包含引擎、渲染和通用骨架/蒙皮算法。无照片、衣服贴图或角色轮廓；数据 v2 要求 owning asset 提供这些会话素材。头像与服装图片只接受有界 PNG（单边2048、九图槽合计8 MiPixels），轮廓每个 JSON 仍限64 KiB，允许无损uint8 Base64距离图；派生网格另有顶点/三角上限。
+
+兼容基线是实际签名构建验证的受邀 macOS arm64 `0.26.0-ragdoll.1`，不声称旧 `0.26.0` 支持。旧版本在 renderer kind 校验处拒装；当前版本比较不严格区分预发布后缀，不能只凭版本号比较宣称兼容。此登记只发布插件，不公开宿主安装包。普通动作继续使用原有 PNG，缺少/未授权/版本不兼容 renderer 时回退；v1角色包需配套迁移至v2。
+
+The public CI release contains algorithms and dependencies only, no character assets. Data v2 is owned by this provider and does not change the host bridge. The verified compatibility baseline is the invited signed macOS arm64 candidate `0.26.0-ragdoll.1`, not older `0.26.0`. Older hosts reject the renderer kind; numeric version comparison alone cannot prove support. Publication is limited to the plugin, with no host download locations. Ordinary PNG animations and missing-provider fallback remain available. Legacy v1 appearances require separate migration.
+
+发布前证据：隐藏真实宿主市场管线安装/授权及双角色重启84项通过；签名候选真实跨实例来访等168项通过，零未捕获异常。本轮无Windows或物理Wi-Fi广播验收；线上发布后仍须实测正式市场下载、摘要与安装。
+
+Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 signed-candidate cross-instance visitor checks passed without uncaught exceptions. This does not claim Windows or physical Wi-Fi broadcast coverage. The live marketplace download, hash and install are verified separately after publication.
