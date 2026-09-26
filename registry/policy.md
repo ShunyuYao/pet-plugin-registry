@@ -125,6 +125,7 @@ Installation must not take over the current appearance. Selection, reset, draft 
 - 公共 renderer 包和个人 asset 包分开审核。前者只含公共渲染代码与模型；照片及个人参数必须留在个人包，不因授权发布 renderer 而公开个人素材。
 - renderer 必须仅声明 appearance-renderer kind、appearance:render 权限，以及包内 HTML 入口与真实支持的桥/数据版本。本期桥版本 apiVersion 为 1；dataVersions 是 1–64 项不重复的正安全整数，由 renderer 定义。声明示例为 `entry.renderer:{src,apiVersion:1,dataVersions:[1]}`；不得附带 tool/panel/service 入口、申请额外通用权限、下载执行远端代码或自行选择目标宠物。
 - asset 的 realtime 声明只能引用本地已安装提供者。data/assets 使用 character.json 相对路径；校验真实路径与软链接边界。data JSON 上限 64 KiB；最多 32 项资源，单项 16 MiB、总计 64 MiB，类型限 png/jpg/jpeg/webp/json/glb/bin。单张图片每边最多 8192 像素、总像素最多 16 × 1024²；资源只作为数据读取，不能用 JSON、模型依赖或纹理路径绕过代码/网络限制。
+- 申请 `character:read` 的插件可经 `character.getRealtime` 读到当前形象的实时外观资源，其中可能含用户个人照片。说明中须写明用途；未经明示同意不得上传、转发或长期保存这些资源，审核时按个人数据处理。
 - 渲染上下文只获得绑定会话、不可变数据及资源句柄。不得申请宿主目录、凭据、全局鼠标监听或另一主宠/访客的身份。appearance 与 character:read 均不能替代 appearance:render 授权。
 - 实测首帧就绪、有界帧通道、无效帧不保活、透明命中、抓取结束后继续渲染、异常回退。准备阶段 ACK 必须在离屏准备画布绘制后发出，且不覆盖当前普通姿态；活动阶段 ACK 必须在可见画布提交后发出。刷新同 key、切换形象、禁用/卸载任一包、关闭目标、出发及显示器变化必须回收旧会话；旧帧与通知不能恢复已结束会话。面板关闭不能意外终止渲染。
 - 安装不能自动换装。没有兼容 renderer 时本机使用普通动作并提供可识别状态；不可将配置 ready 或 IPC 发送成功当作显示完成。

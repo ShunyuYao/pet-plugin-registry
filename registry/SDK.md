@@ -168,3 +168,10 @@ Validation status (2026-09-22): a private macOS arm64 signed-ASAR candidate pass
 `pet-ragdoll-renderer` 使用现有实验 `PetRender` 三方法和声明式资源接口；它定义的 `dataVersion: 2` 将衣服贴图、轮廓及头像都放在角色包，公共 provider 不含形象素材。这是 provider 私有数据版本的变化，不是宿主桥 API 升级。兼容基线为受邀 macOS arm64 候选 `0.26.0-ragdoll.1`，旧 `0.26.0` 不支持。宿主仍仅受邀分发，不因插件公开而公开宿主。
 
 The independent provider uses the existing experimental three-method render bridge. Provider-owned appearance data v2 moves clothing textures, contours and portraits into the owning appearance package; it does not add a host SDK method or a scaffold permission. Compatibility is limited to the invited realtime-capable macOS arm64 candidate `0.26.0-ragdoll.1`; older `0.26.0` is unsupported. Publishing a provider does not publish host installers or an npm SDK version.
+
+## 读取实时外观 / Realtime appearance read（实验，未发布）
+
+新增 `pet.character.getRealtime(): Promise<RealtimeSnapshot | null>`，tool / panel / block 与宿主 HTML 作品可用，复用 `character:read`。返回当前形象 `realtime` 描述的 renderer、dataVersion、data 与资源内容（base64，不含路径）；无实时描述返回 `null`。只读，不授予 `appearance:render`。尚无已发布宿主支持，插件必须先探测并回退到 `getCurrent`；不得据 apiVersion 1 或类型包版本声明最低宿主版本。
+
+Read-only snapshot of the current appearance's realtime data. No released host supports it yet; probe and fall back. It does not grant rendering authority.
+
