@@ -181,3 +181,33 @@ Read-only snapshot of the current appearance's realtime data. No released host s
 只影响宿主 HTML 作品专用的 `pet.sessions`，插件（tool / panel / block）不可见，不新增方法、不改权限名（仍为 `sessions:connect`）。作品声明 `interaction.players` 由固定 2 放宽到 2–4：3–4 人作品的房主可以在游戏窗口控制栏「＋ 邀请」再邀请局域网设备加入同一房间（每位客人独立配对、同意与授权，房主一次只能有一张未应答邀请）。增量：`getContext()` 对 3–4 人作品增加 `maxPlayers`，房主另有 `peers`；`send` / `transfer` 可选 `to`（客人 id 或 `'*'`，房主有多位客人时必填，客人不得使用）；房主收到的事件带 `from`，新增 `peer_joined` / `peer_left`。2 人作品的行为与返回值不变。旧宿主只接受 `players: 2`，会拒绝声明 3–4 人的整份作品，作品作者应保留 2 人版本给旧宿主。尚无已发布宿主支持。
 
 HTML-work-only `pet.sessions` now accepts `interaction.players` 2–4. Hosts of 3–4 player works invite more LAN guests from the work window's control bar, each with its own pairing, consent and grant. Additions: `maxPlayers` (and host-only `peers`) in `getContext()`, optional `to` on `send`/`transfer`, `from` on host events, `peer_joined`/`peer_left`. Two-player works are unchanged. Older hosts reject any declaration other than `players: 2`, so keep a two-player build for them. No released host supports rooms yet.
+
+
+## 通用手柄输入 / Action input（experimental，未发布）
+
+2026-09-29 候选新增 `input` 10 个 B 档方法。`input.d.ts` 声明输入数据和方法，`work.d.ts` 补齐 HTML 作品独立根；普通 plugin 根没有 work 的输入捕获或联机会话权限。`apiVersion: 1`、源码包版本和手柄协议 1 均不证明旧宿主支持；本轮没有 npm 发布、最低已发布宿主版本或硬件兼容承诺。
+
+The September 29 candidate adds ten experimental input methods and a separate HTML-work type root. This is unreleased source, not a published npm package or a minimum supported host release. Input protocol 1, package version and host apiVersion are independent; none proves hardware compatibility.
+
+| Context | Input methods | Permission |
+| --- | --- | --- |
+| tool | registerProvider, getConfig, updateConfig, unregisterProvider | input:provide |
+| panel | getConfig, updateConfig | input:provide; panel entry also needs ui |
+| work | connect, read, setContext, onStatus, openSettings, disconnect | service:gamepad-input |
+| block / render | None | No input authority |
+
+提供方必须包含 tool 入口，身份由宿主绑定；panel 只改自己提供方的配置，关面板不会停输入。第一次已授权登记选择提供方，后来的插件不能抢占。默认值不覆盖旧偏好；updateConfig 用 expectedRevision 原子比较写入，写失败不广播，逐游戏 target 只接受宿主登记的 gameKey。全局绑定限通用 ui.*，自定义动作在逐游戏层配置；实际合并后的映射也校验类型和冲突。
+
+A provider must have a tool entry. Identity and selection belong to the host, and panels configure only their own provider. Registration preserves preferences. Configuration changes use atomic revision/CAS updates; failure keeps the old active configuration. Game targets are host-issued identities; global bindings use only common ui.* actions, while custom actions are configured per game. Closing a panel does not stop its provider.
+
+高频采样与 read 留在游戏的隔离 preload 中，不逐帧调用提供方/主进程。游戏声明动作并保留键鼠路径；失焦、断连、撤权或提供方失败会中和，resetRevision 变化时须取消旧持续动作并推进 press/release 消费基线。强制中和不伪造物理 releaseCount，避免蓄力误发招。重新启用先等待回中；gameplay 中的新配置到菜单/暂停才整体生效，onStatus 报 pendingRevision。提示取 presentation 的有限文本/glyph，不能假定按钮数组下标或具体品牌。
+
+Sampling and synchronous read remain inside the work preload. Games retain keyboard/mouse paths and consume monotonic edges once. Focus loss, disconnection, revocation and provider failure cancel held actions without synthesizing a physical release. On resetRevision changes, cancel gameplay and advance consumption baselines. Restoration requires neutral controls; configuration changes wait for a menu/pause boundary and report pendingRevision. Use presentation labels/glyphs for prompts.
+
+HTML 沿用 v1/v2 的 service:gamepad-input 权限，并探测 pet.input 后回退键鼠。该服务名是宿主保留名；不得通过 services.provide/get/invoke 冒用，通用 provide 仍为 C 档未公开。work 没有通用 events/get 服务代理。work.sessions 类型反映已有 2–4 人实际契约，不能由此推断旧宿主支持 3–4 人声明。
+
+HTML keeps the existing named-service permission and feature-detects pet.input. gamepad-input is reserved and cannot be impersonated or accessed through generic service discovery/invocation. Generic services.provide remains closed. Work receives no generic plugin events or service proxies; its session types reflect the current 2–4 player contract, not compatibility with older hosts.
+
+首轮真机目标是 macOS + PS5 DualSense；Xbox、PS4/PS5 是计划支持范围，USB/蓝牙、原生焦点和具体型号仍需单独记录证据。纯 Node/类型/示例编译不证明设备兼容。当前数据格式只接受浏览器 standard mapping；auto 无可靠型号信息时显示通用标签，手动 Xbox/PlayStation 标签也不改变物理映射。没有震动、陀螺仪、自适应扳机或同机多人契约。
+
+The first hardware target is macOS with PS5 DualSense. Planned Xbox/PS4/PS5 coverage still requires model, OS and USB/Bluetooth evidence. Unit/type/example compilation is not hardware validation. This candidate accepts standard Gamepad mappings only; label preferences do not change physical mappings. Haptics, gyro, adaptive triggers and local multiplayer are outside this contract.

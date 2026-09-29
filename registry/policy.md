@@ -153,3 +153,20 @@ The public CI release contains algorithms and dependencies only, no character as
 发布前证据：隐藏真实宿主市场管线安装/授权及双角色重启84项通过；签名候选真实跨实例来访等168项通过，零未捕获异常。本轮无Windows或物理Wi-Fi广播验收；线上发布后仍须实测正式市场下载、摘要与安装。
 
 Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 signed-candidate cross-instance visitor checks passed without uncaught exceptions. This does not claim Windows or physical Wi-Fi broadcast coverage. The live marketplace download, hash and install are verified separately after publication.
+
+
+## 手柄输入提供方审核 / Input provider review（候选，未发布）
+
+- `input:provide` 只允许含 tool 入口且已授权的插件登记；panel 只修改同一插件的配置。不得申请或读取其他游戏原始按键流、设备序列号、账号凭据或游戏存档。提供方接受声明式布局/校准数据，不向作品注入任意代码。
+- `gamepad-input` 为宿主保留服务名，通用 `services.provide/get/invoke` 不能注册或绕过该入口；本轮不开放通用提供服务能力。HTML 消费方只申请 `service:gamepad-input`，不得持有提供方管理权限。
+- 选择由宿主持久化；第二提供方不得凭启动顺序抢占，也不得在当前提供方停用时静默替换。配置须采用原子 revision/CAS，失败不改有效旧值或提前报告成功；插件默认设置不得覆盖用户偏好。
+- 验证失焦、设备断开、插件停用/崩溃/卸载、撤权、作品导航与账号作用域切换后的中和及资源回收。不能仅依赖插件 deactivate 钩子。取消蓄力不等于真实松手；回中屏障、键鼠回退和游戏菜单应分别验收。
+- 无高频跨进程按键转发，不默认上传设备 id 或按键轨迹。提示仅使用有界纯文本/有限 glyph；未知布局明确不可用，不宣称“任意手柄即插即用”。
+- 宿主、类型与脚手架按 tool/panel/block/render/work 五上下文核对，保留 render 隔离和 work 的独立权限。类型/单元/示例测试之外，必须明确硬件测试的系统、设备型号、连接方式和候选构建。
+- 当前是未发布候选。没有实际发布包、校验和与候选宿主验证前，不增加 marketplace 条目或虚构最低支持版本；插件公开不授权公开测试宿主安装包、下载位置、账号或测试数据。
+
+Review input providers as bounded declarative configuration owners. Require an authorized tool entry and own-provider panel access; games receive only the consumption permission. Reserve gamepad-input against generic service impersonation. Selection must not be stolen by startup order, preferences must survive restart, and failed CAS/persistence must not activate partial changes.
+
+Verify cancellation and cleanup after focus/device/provider/permission/work/account lifecycle changes, including crashes without a plugin hook. Cancellation must not trigger charged attacks. Require keyboard fallback, neutral barriers, real menu integration and a bounded local sampling path. Do not collect raw input streams, device identifiers or unrelated data. Inspect all five SDK contexts and record actual OS/model/transport/build evidence separately from unit and type checks.
+
+This candidate does not establish a released host version or hardware compatibility. Do not register nonexistent packages, hashes or support versions, and do not publish testing-stage host download locations or private test data.
