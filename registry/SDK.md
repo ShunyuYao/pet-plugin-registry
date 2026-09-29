@@ -74,7 +74,7 @@ SKIP；这种结果不能当作 SDK 已完成同步的证据。应记录：三�
 
 ## 插件账号授权增量（experimental，尚未发布）
 
-新增 `account.getState` / `account.authorize`，仅 tool，可用前提是目标宿主与账号服务均支持，并登记了对应 serviceId。权限为 `account:authorize:<serviceId>`；同一 apiVersion 1 不代表旧宿主已有此能力。当前最低已发布支持版本尚未确定，不能据文档更新提高兼容承诺。
+新增 `account.getState` / `account.authorize`，tool 可用（HTML 扩展见下文），前提是目标宿主与账号服务均支持，并登记了对应 serviceId。权限为 `account:authorize:<serviceId>`；同一 apiVersion 1 不代表旧宿主已有此能力。当前最低已发布支持版本尚未确定，不能据文档更新提高兼容承诺。
 
 三仓同步：类型包提供状态 / 一次性码类型、权限及编译断言；脚手架更新矩阵但不自动申请新权限；本仓增加审核规则。这次没有游戏插件发布包，不改 plugins.json 的版本、下载和摘要。All three public repositories must be checked for each SDK change, with an explicit reason for every unchanged surface. Public synchronization is not evidence of a released host or deployed account service.
 
@@ -181,3 +181,21 @@ Read-only snapshot of the current appearance's realtime data. No released host s
 只影响宿主 HTML 作品专用的 `pet.sessions`，插件（tool / panel / block）不可见，不新增方法、不改权限名（仍为 `sessions:connect`）。作品声明 `interaction.players` 由固定 2 放宽到 2–4：3–4 人作品的房主可以在游戏窗口控制栏「＋ 邀请」再邀请局域网设备加入同一房间（每位客人独立配对、同意与授权，房主一次只能有一张未应答邀请）。增量：`getContext()` 对 3–4 人作品增加 `maxPlayers`，房主另有 `peers`；`send` / `transfer` 可选 `to`（客人 id 或 `'*'`，房主有多位客人时必填，客人不得使用）；房主收到的事件带 `from`，新增 `peer_joined` / `peer_left`。2 人作品的行为与返回值不变。旧宿主只接受 `players: 2`，会拒绝声明 3–4 人的整份作品，作品作者应保留 2 人版本给旧宿主。尚无已发布宿主支持。
 
 HTML-work-only `pet.sessions` now accepts `interaction.players` 2–4. Hosts of 3–4 player works invite more LAN guests from the work window's control bar, each with its own pairing, consent and grant. Additions: `maxPlayers` (and host-only `peers`) in `getContext()`, optional `to` on `send`/`transfer`, `from` on host events, `peer_joined`/`peer_left`. Two-player works are unchanged. Older hosts reject any declaration other than `players: 2`, so keep a two-player build for them. No released host supports rooms yet.
+
+
+## HTML account authorization / HTML 账号授权（未发布候选）
+
+The account capability is now available in the enhanced HTML `work` context as well as plugin `tool`; panel/block remain unsupported. This is a context extension of the existing experimental methods, not a new authentication protocol. No published host/package compatibility is claimed.
+
+增强 HTML 可声明 `account:authorize:cat-leaderboard`（或另一个已登记服务），再由用户通过可信宿主授权界面批准。调用 `pet.account.getState({serviceId})` 读取 `{signedIn,uid,revision}`；`pet.account.authorize({serviceId,challengeId,codeChallenge})` 返回一次性 `{code,expiresIn,revision}`。`PetAccount` 是两种上下文共用的账号能力类型。权限声明不等于授权；授权仅对应指定服务，不能继承别的作品、插件或账号权限。
+
+UID identifies an account; it is not proof of ownership. The registered service backend exchanges the short-lived code with PKCE and revalidates the parent session. Host access/refresh tokens never enter an HTML work or service backend. Closing/revoking a work or switching accounts cancels pending authorization.
+
+HTML 只在用户主动启用相关功能时调用 `capabilities.request({})`。新增网络许可会重载页面，须在游戏开局或编辑草稿之前完成；拒绝或能力不支持时保留本地功能，不能伪造登录或降级创建匿名参榜身份。账号查询本身不会弹出授权，也不会提供登录凭据。
+
+| Method | tool | panel | block | work | Permission |
+|---|---|---|---|---|---|
+| account.getState | experimental | — | — | experimental | account:authorize:<serviceId> |
+| account.authorize | experimental | — | — | experimental | account:authorize:<serviceId> |
+
+No new method is added: method counts and apiVersion remain unchanged. Base scaffold permissions are unchanged. Host and account service support must be detected at runtime; this documentation does not establish a minimum released host version.

@@ -153,3 +153,10 @@ The public CI release contains algorithms and dependencies only, no character as
 发布前证据：隐藏真实宿主市场管线安装/授权及双角色重启84项通过；签名候选真实跨实例来访等168项通过，零未捕获异常。本轮无Windows或物理Wi-Fi广播验收；线上发布后仍须实测正式市场下载、摘要与安装。
 
 Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 signed-candidate cross-instance visitor checks passed without uncaught exceptions. This does not claim Windows or physical Wi-Fi broadcast coverage. The live marketplace download, hash and install are verified separately after publication.
+
+
+### Enhanced HTML account delegation (unreleased candidate) / HTML 账号委托
+
+Enhanced HTML works may declare a specific registered `account:authorize:<serviceId>` only for a clearly disclosed account-backed feature. Explicit approval in trusted host UI is required. A UID must never be accepted as authentication by itself; use one-time service-bound PKCE delegation and server-side validation. Access/refresh tokens, secrets, and raw host IPC must never be exposed.
+
+账号能力扩展到 HTML work，仍不开放 panel/block。作品应在开局/编辑前完成网络授权，撤权、关闭、登出与切账号后停止云端动作；不能将旧账号成绩交给新账号。排行榜必须按已验证账号唯一归属，旧游客数据迁移需要恢复凭据证明并防止重复认领，禁止依靠同名/头像/指纹冒认。此次未登记市场插件、未发布 npm 或宿主安装包，不增加最低已发布版本承诺。
