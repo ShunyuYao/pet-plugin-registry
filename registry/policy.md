@@ -80,8 +80,8 @@ release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（�
 ## 插件账号授权审核（新实验能力，待支持版本发布）
 
 - 只可使用已登记的 `account:authorize:<serviceId>`，README 披露目标服务、验证身份的用途及上传的公开资料 / 成绩；不能借用别的服务授权或把 UID 当作登录凭据。
-- `account.getState` / `account.authorize` 仅 tool；宿主 access / refresh token 不得暴露给插件、页面或服务后端，禁止读取宿主账号文件来绕过 SDK。
-- 一次性码绑定目标服务、每次独立挑战与 S256 PKCE，禁止重用；游戏会话只保存在 tool 内存，不发到 panel、通用事件总线或日志。无需长期保存的密钥不落盘；确有持久化必要时仍遵守 secrets 政策。
+- `account.getState` / `account.authorize` 仅 tool 与增强 HTML work，仍不开放 panel/block/render；宿主 access / refresh token 不得暴露给插件、页面或服务后端，禁止读取宿主账号文件来绕过 SDK。
+- 一次性码绑定目标服务、每次独立挑战与 S256 PKCE，禁止重用；游戏的服务会话只保存在对应 tool 或 HTML work 实例的内存与作用域内，不发到 panel、通用事件总线或日志，也不跨实例共享。无需长期保存的密钥不落盘；确有持久化必要时仍遵守 secrets 政策，HTML work 不因此获得 secrets 能力。
 - 登录变化、停用、卸载或崩溃后停止旧身份请求并丢弃迟到结果；服务端每次受保护操作验证父账号授权。只有账号服务成功确认登出才保证立即失效；离线登出或撤销请求失败时，本机立即停用、服务端最长 10 分钟的撤销延迟必须如实说明。
 - 声明对应网络域名，核对真实最低宿主版本和服务端支持；此能力未发布前不能将依赖它的插件登记为对旧宿主可用。Account verification must never expose host credentials, bypass public SDK boundaries, or claim support based only on API documentation.
 
@@ -153,3 +153,32 @@ The public CI release contains algorithms and dependencies only, no character as
 发布前证据：隐藏真实宿主市场管线安装/授权及双角色重启84项通过；签名候选真实跨实例来访等168项通过，零未捕获异常。本轮无Windows或物理Wi-Fi广播验收；线上发布后仍须实测正式市场下载、摘要与安装。
 
 Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 signed-candidate cross-instance visitor checks passed without uncaught exceptions. This does not claim Windows or physical Wi-Fi broadcast coverage. The live marketplace download, hash and install are verified separately after publication.
+
+
+## 手柄输入提供方审核 / Input provider review（候选，未发布）
+
+- `input:provide` 只允许含 tool 入口且已授权的插件登记；panel 只修改同一插件的配置。不得申请或读取其他游戏原始按键流、设备序列号、账号凭据或游戏存档。提供方接受声明式布局/校准数据，不向作品注入任意代码。
+- `gamepad-input` 为宿主保留服务名，通用 `services.provide/get/invoke` 不能注册或绕过该入口；本轮不开放通用提供服务能力。HTML 消费方只申请 `service:gamepad-input`，不得持有提供方管理权限。
+- 选择由宿主持久化；第二提供方不得凭启动顺序抢占，也不得在当前提供方停用时静默替换。配置须采用原子 revision/CAS，失败不改有效旧值或提前报告成功；插件默认设置不得覆盖用户偏好。
+- 验证失焦、设备断开、插件停用/崩溃/卸载、撤权、作品导航与账号作用域切换后的中和及资源回收。不能仅依赖插件 deactivate 钩子。取消蓄力不等于真实松手；回中屏障、键鼠回退和游戏菜单应分别验收。
+- 无高频跨进程按键转发，不默认上传设备 id 或按键轨迹。提示仅使用有界纯文本/有限 glyph；未知布局明确不可用，不宣称“任意手柄即插即用”。
+- 宿主、类型与脚手架按 tool/panel/block/render/work 五上下文核对，保留 render 隔离和 work 的独立权限。类型/单元/示例测试之外，必须明确硬件测试的系统、设备型号、连接方式和候选构建。
+- 当前是未发布候选。没有实际发布包、校验和与候选宿主验证前，不增加 marketplace 条目或虚构最低支持版本；插件公开不授权公开测试宿主安装包、下载位置、账号或测试数据。
+
+Review input providers as bounded declarative configuration owners. Require an authorized tool entry and own-provider panel access; games receive only the consumption permission. Reserve gamepad-input against generic service impersonation. Selection must not be stolen by startup order, preferences must survive restart, and failed CAS/persistence must not activate partial changes.
+
+Verify cancellation and cleanup after focus/device/provider/permission/work/account lifecycle changes, including crashes without a plugin hook. Cancellation must not trigger charged attacks. Require keyboard fallback, neutral barriers, real menu integration and a bounded local sampling path. Do not collect raw input streams, device identifiers or unrelated data. Inspect all five SDK contexts and record actual OS/model/transport/build evidence separately from unit and type checks.
+
+This candidate does not establish a released host version or hardware compatibility. Do not register nonexistent packages, hashes or support versions, and do not publish testing-stage host download locations or private test data.
+
+
+### Enhanced HTML account delegation (unreleased candidate) / HTML 账号委托
+
+Enhanced HTML works may declare a specific registered `account:authorize:<serviceId>` only for a clearly disclosed account-backed feature. Explicit approval in trusted host UI is required. A UID must never be accepted as authentication by itself; use one-time service-bound PKCE delegation and server-side validation. Access/refresh tokens, secrets, and raw host IPC must never be exposed.
+
+账号能力扩展到 HTML work，仍不开放 panel/block。作品应在开局/编辑前完成网络授权，撤权、关闭、登出与切账号后停止云端动作；不能将旧账号成绩交给新账号。排行榜必须按已验证账号唯一归属，旧游客数据迁移需要恢复凭据证明并防止重复认领，禁止依靠同名/头像/指纹冒认。此次未登记市场插件、未发布 npm 或宿主安装包，不增加最低已发布版本承诺。
+
+
+授权记忆审核须区分“复用同一作品已批准权限”和“扩大授权”：仅当前账号作用域、相同内容及完整声明可以复用；内容/声明变化、接收来源或账号不同必须保持隔离，撤权不得因重开自动恢复。按标题、路径或游戏自报 id 继承权限不合格。关闭/导航/撤权/账号切换仍须回收正在执行的账号授权和手柄会话，记住授权不等于保留已关闭页面的运行句柄。
+
+Grant-memory review must distinguish reuse from escalation. Only the same account scope, content and full declaration may reuse approval; other accounts, received sources or modified declarations remain isolated. Reopening must not undo revocation. Titles, paths and self-declared ids do not confer authority. Account delegation and input sessions must still clean up on closing, navigation, revocation and scope changes; remembered consent does not preserve a dead page's handles.
