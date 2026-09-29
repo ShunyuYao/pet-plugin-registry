@@ -80,8 +80,8 @@ release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（�
 ## 插件账号授权审核（新实验能力，待支持版本发布）
 
 - 只可使用已登记的 `account:authorize:<serviceId>`，README 披露目标服务、验证身份的用途及上传的公开资料 / 成绩；不能借用别的服务授权或把 UID 当作登录凭据。
-- `account.getState` / `account.authorize` 仅 tool；宿主 access / refresh token 不得暴露给插件、页面或服务后端，禁止读取宿主账号文件来绕过 SDK。
-- 一次性码绑定目标服务、每次独立挑战与 S256 PKCE，禁止重用；游戏会话只保存在 tool 内存，不发到 panel、通用事件总线或日志。无需长期保存的密钥不落盘；确有持久化必要时仍遵守 secrets 政策。
+- `account.getState` / `account.authorize` 仅 tool 与增强 HTML work，仍不开放 panel/block/render；宿主 access / refresh token 不得暴露给插件、页面或服务后端，禁止读取宿主账号文件来绕过 SDK。
+- 一次性码绑定目标服务、每次独立挑战与 S256 PKCE，禁止重用；游戏的服务会话只保存在对应 tool 或 HTML work 实例的内存与作用域内，不发到 panel、通用事件总线或日志，也不跨实例共享。无需长期保存的密钥不落盘；确有持久化必要时仍遵守 secrets 政策，HTML work 不因此获得 secrets 能力。
 - 登录变化、停用、卸载或崩溃后停止旧身份请求并丢弃迟到结果；服务端每次受保护操作验证父账号授权。只有账号服务成功确认登出才保证立即失效；离线登出或撤销请求失败时，本机立即停用、服务端最长 10 分钟的撤销延迟必须如实说明。
 - 声明对应网络域名，核对真实最低宿主版本和服务端支持；此能力未发布前不能将依赖它的插件登记为对旧宿主可用。Account verification must never expose host credentials, bypass public SDK boundaries, or claim support based only on API documentation.
 
@@ -170,3 +170,15 @@ Review input providers as bounded declarative configuration owners. Require an a
 Verify cancellation and cleanup after focus/device/provider/permission/work/account lifecycle changes, including crashes without a plugin hook. Cancellation must not trigger charged attacks. Require keyboard fallback, neutral barriers, real menu integration and a bounded local sampling path. Do not collect raw input streams, device identifiers or unrelated data. Inspect all five SDK contexts and record actual OS/model/transport/build evidence separately from unit and type checks.
 
 This candidate does not establish a released host version or hardware compatibility. Do not register nonexistent packages, hashes or support versions, and do not publish testing-stage host download locations or private test data.
+
+
+### Enhanced HTML account delegation (unreleased candidate) / HTML 账号委托
+
+Enhanced HTML works may declare a specific registered `account:authorize:<serviceId>` only for a clearly disclosed account-backed feature. Explicit approval in trusted host UI is required. A UID must never be accepted as authentication by itself; use one-time service-bound PKCE delegation and server-side validation. Access/refresh tokens, secrets, and raw host IPC must never be exposed.
+
+账号能力扩展到 HTML work，仍不开放 panel/block。作品应在开局/编辑前完成网络授权，撤权、关闭、登出与切账号后停止云端动作；不能将旧账号成绩交给新账号。排行榜必须按已验证账号唯一归属，旧游客数据迁移需要恢复凭据证明并防止重复认领，禁止依靠同名/头像/指纹冒认。此次未登记市场插件、未发布 npm 或宿主安装包，不增加最低已发布版本承诺。
+
+
+授权记忆审核须区分“复用同一作品已批准权限”和“扩大授权”：仅当前账号作用域、相同内容及完整声明可以复用；内容/声明变化、接收来源或账号不同必须保持隔离，撤权不得因重开自动恢复。按标题、路径或游戏自报 id 继承权限不合格。关闭/导航/撤权/账号切换仍须回收正在执行的账号授权和手柄会话，记住授权不等于保留已关闭页面的运行句柄。
+
+Grant-memory review must distinguish reuse from escalation. Only the same account scope, content and full declaration may reuse approval; other accounts, received sources or modified declarations remain isolated. Reopening must not undo revocation. Titles, paths and self-declared ids do not confer authority. Account delegation and input sessions must still clean up on closing, navigation, revocation and scope changes; remembered consent does not preserve a dead page's handles.

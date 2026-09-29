@@ -74,7 +74,7 @@ SKIP；这种结果不能当作 SDK 已完成同步的证据。应记录：三�
 
 ## 插件账号授权增量（experimental，尚未发布）
 
-新增 `account.getState` / `account.authorize`，仅 tool，可用前提是目标宿主与账号服务均支持，并登记了对应 serviceId。权限为 `account:authorize:<serviceId>`；同一 apiVersion 1 不代表旧宿主已有此能力。当前最低已发布支持版本尚未确定，不能据文档更新提高兼容承诺。
+新增 `account.getState` / `account.authorize`，tool 与增强 HTML work 可用，前提是目标宿主与账号服务均支持，并登记了对应 serviceId。权限为 `account:authorize:<serviceId>`；同一 apiVersion 1 不代表旧宿主已有此能力。当前最低已发布支持版本尚未确定，不能据文档更新提高兼容承诺。
 
 三仓同步：类型包提供状态 / 一次性码类型、权限及编译断言；脚手架更新矩阵但不自动申请新权限；本仓增加审核规则。这次没有游戏插件发布包，不改 plugins.json 的版本、下载和摘要。All three public repositories must be checked for each SDK change, with an explicit reason for every unchanged surface. Public synchronization is not evidence of a released host or deployed account service.
 
@@ -211,3 +211,37 @@ HTML keeps the existing named-service permission and feature-detects pet.input. 
 首轮真机目标是 macOS + PS5 DualSense；Xbox、PS4/PS5 是计划支持范围，USB/蓝牙、原生焦点和具体型号仍需单独记录证据。纯 Node/类型/示例编译不证明设备兼容。当前数据格式只接受浏览器 standard mapping；auto 无可靠型号信息时显示通用标签，手动 Xbox/PlayStation 标签也不改变物理映射。没有震动、陀螺仪、自适应扳机或同机多人契约。
 
 The first hardware target is macOS with PS5 DualSense. Planned Xbox/PS4/PS5 coverage still requires model, OS and USB/Bluetooth evidence. Unit/type/example compilation is not hardware validation. This candidate accepts standard Gamepad mappings only; label preferences do not change physical mappings. Haptics, gyro, adaptive triggers and local multiplayer are outside this contract.
+
+
+## HTML account authorization / HTML 账号授权（未发布候选）
+
+The account capability is now available in the enhanced HTML `work` context as well as plugin `tool`; panel/block remain unsupported. This is a context extension of the existing experimental methods, not a new authentication protocol. No published host/package compatibility is claimed.
+
+增强 HTML 可声明 `account:authorize:cat-leaderboard`（或另一个已登记服务），再由用户通过可信宿主授权界面批准。调用 `pet.account.getState({serviceId})` 读取 `{signedIn,uid,revision}`；`pet.account.authorize({serviceId,challengeId,codeChallenge})` 返回一次性 `{code,expiresIn,revision}`。`PetAccount` 是两种上下文共用的账号能力类型，`PetWork.account` 显式复用它，不继承其他 tool 能力。权限声明不等于授权；授权仅对应指定服务，不能继承别的作品、插件或账号权限。
+
+UID identifies an account; it is not proof of ownership. The registered service backend exchanges the short-lived code with PKCE and revalidates the parent session. Host access/refresh tokens never enter an HTML work or service backend. Closing/revoking a work or switching accounts cancels pending authorization.
+
+HTML 只在用户主动启用相关功能时调用 `capabilities.request({})`。新增网络许可会重载页面，须在游戏开局或编辑草稿之前完成；拒绝或能力不支持时保留本地功能，不能伪造登录或降级创建匿名参榜身份。账号查询本身不会弹出授权，也不会提供登录凭据。
+
+| Method | tool | panel | block | work | Permission |
+|---|---|---|---|---|---|
+| account.getState | experimental | — | — | experimental | account:authorize:<serviceId> |
+| account.authorize | experimental | — | — | experimental | account:authorize:<serviceId> |
+
+No new method is added: method counts and apiVersion remain unchanged. Base scaffold permissions are unchanged. Host and account service support must be detected at runtime; this documentation does not establish a minimum released host version.
+
+旧宿主若尚不识别 `account:authorize:<serviceId>`，会在读取声明时拒绝整份 HTML，运行时方法探测无法补救；需要兼容它们时保留无账号权限声明的作品版本。纯手柄示例沿用旧命名服务权限的兼容路径不受此影响。
+
+Older hosts that do not recognize the account permission reject the HTML declaration before scripts run; feature detection alone cannot provide fallback. Retain a build without account permissions when supporting those hosts. The controller-only example's existing named-service permission path is unchanged.
+
+
+
+### 本机 HTML 授权记忆 / Local HTML grant memory（未发布候选）
+
+本机预览的已批准权限可按当前账号作用域、作品字节摘要和完整声明记忆；重开相同内容无需重复批准。作品内容或声明变化、账号切换不会继承该授权，收到的作品仍按其来源单独隔离。撤权保持到用户明确重新批准；不能将相同标题、文件名或游戏自报 id 当作授权身份。此记忆只复用已批准能力，不扩大手柄、存储或账号能力权限，也不新增公开 SDK 方法。输入配置、游戏私有存储和调用者生命周期仍按各自原有作用域处理。
+
+Approved local-preview grants may be remembered for the current account scope, exact work content hash and complete declaration. Changed content/declarations or another account do not inherit approval; received works retain source isolation. Revocation remains until explicit approval. Names and self-declared game ids are not authority. This reuses approval without expanding input, storage or account authority. It adds no public SDK method; input preferences, private storage and caller lifetimes retain their existing scopes.
+
+这次同步不增加公开方法总数（仍为30个A档、59个B档），仅使work入口从25增至27项；手柄输入10方法、三种普通插件及render隔离保持原契约。授权记忆与账号扩展均需实际候选宿主验证，不据文档推断已发布兼容版本。
+
+The public method count remains 30 frozen and 59 experimental; work gains the two existing account methods, increasing its exposed members from 25 to 27. Input's ten methods and ordinary-plugin/render boundaries are unchanged. These candidate semantics require host verification and do not establish a released compatibility version.
