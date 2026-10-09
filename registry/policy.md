@@ -160,3 +160,13 @@ Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 
 Enhanced HTML works may declare a specific registered `account:authorize:<serviceId>` only for a clearly disclosed account-backed feature. Explicit approval in trusted host UI is required. A UID must never be accepted as authentication by itself; use one-time service-bound PKCE delegation and server-side validation. Access/refresh tokens, secrets, and raw host IPC must never be exposed.
 
 账号能力扩展到 HTML work，仍不开放 panel/block。作品应在开局/编辑前完成网络授权，撤权、关闭、登出与切账号后停止云端动作；不能将旧账号成绩交给新账号。排行榜必须按已验证账号唯一归属，旧游客数据迁移需要恢复凭据证明并防止重复认领，禁止依靠同名/头像/指纹冒认。此次未登记市场插件、未发布 npm 或宿主安装包，不增加最低已发布版本承诺。
+
+
+### Invitation-based internet sessions (unreleased candidate) / 邀请制公网会话
+
+- 仅增强 HTML work 可使用 `sessions:connect`；普通插件 tool/panel/block 不得绕过上下文边界。声明 `interaction.transport: 'auto'` 才允许明确邀请走公网，`'lan'` 仍仅局域网；变更声明后重新核对授权摘要，不能扩大已有授权。
+- 邀请必须绑定真实发送者、目标账号、作品摘要、协议及有效期，且双方同意与配对。公网来源必须由已认证中转确认，不能信任正文自称的 UID。维持端到端 TLS、身份校验及有界队列；不得将任意网络地址或原始宿主 IPC 暴露给作品。
+- 验证新旧客户端/服务器的协商与失败路径。旧宿主拒绝不认识的 `'auto'` 声明时保留 LAN 作品版本；不支持的公网邀请应明确失败或仅分享，不能声称联机已建立。
+- 超时、关窗、撤权与断开后，必须停止未完成素材发送并回收接收缓存；素材大小、解压输出与队列均受限。实时消息不能被大素材长期占用。审查取消后的发送字节、缓存及成功事件，不能只检查调用报错。
+
+Review the actual invitation and consent path, authenticated identity binding, bounded decompression/backpressure, cancellation cleanup and old-peer fallback. Local relay tests do not prove two-device internet quality or cloud capacity. This candidate adds no public SDK methods, permission names, package release, or marketplace entry; do not invent a minimum released host version.
