@@ -153,3 +153,10 @@ The public CI release contains algorithms and dependencies only, no character as
 发布前证据：隐藏真实宿主市场管线安装/授权及双角色重启84项通过；签名候选真实跨实例来访等168项通过，零未捕获异常。本轮无Windows或物理Wi-Fi广播验收；线上发布后仍须实测正式市场下载、摘要与安装。
 
 Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 signed-candidate cross-instance visitor checks passed without uncaught exceptions. This does not claim Windows or physical Wi-Fi broadcast coverage. The live marketplace download, hash and install are verified separately after publication.
+
+
+## 完整角色动作读取（未发布） / Complete animation reads (unreleased)
+
+新增 experimental `character.getAnimationCatalog()` 与 `character.getAnimation({state,variant?,offset?,limit?,signature?})`，在 tool/panel/block/HTML work 沿用 `character:read`。目录只含当前角色真实动作、全部变体、帧数/fps/loop/face 和文件可用状态；逐页返回原始 PNG/WebP，不给路径、插件归属、任意角色选择或宿主控制。目录签名固定所有帧修订；分页时传 signature，换角色/源帧变化返回 CHARACTER_ANIMATION_CHANGED。每页最多24帧、原始6MiB/单帧2MiB；跟随 nextOffset 读完。缺可选动作由游戏按语义回退，不得把读取授权解释为外观接管授权。
+
+Both methods are read-only and experimental under existing character:read. No appearance:render or arbitrary file access is granted. Availability describes metadata; image bytes are validated on each read. Probe capabilities before use; getCurrent still returns representative poses. No released minimum host version, npm publication, marketplace update or public host download is implied. Existing plugins.json remains unchanged until a real independently verified release exists.

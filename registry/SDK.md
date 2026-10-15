@@ -181,3 +181,10 @@ Read-only snapshot of the current appearance's realtime data. No released host s
 只影响宿主 HTML 作品专用的 `pet.sessions`，插件（tool / panel / block）不可见，不新增方法、不改权限名（仍为 `sessions:connect`）。作品声明 `interaction.players` 由固定 2 放宽到 2–4：3–4 人作品的房主可以在游戏窗口控制栏「＋ 邀请」再邀请局域网设备加入同一房间（每位客人独立配对、同意与授权，房主一次只能有一张未应答邀请）。增量：`getContext()` 对 3–4 人作品增加 `maxPlayers`，房主另有 `peers`；`send` / `transfer` 可选 `to`（客人 id 或 `'*'`，房主有多位客人时必填，客人不得使用）；房主收到的事件带 `from`，新增 `peer_joined` / `peer_left`。2 人作品的行为与返回值不变。旧宿主只接受 `players: 2`，会拒绝声明 3–4 人的整份作品，作品作者应保留 2 人版本给旧宿主。尚无已发布宿主支持。
 
 HTML-work-only `pet.sessions` now accepts `interaction.players` 2–4. Hosts of 3–4 player works invite more LAN guests from the work window's control bar, each with its own pairing, consent and grant. Additions: `maxPlayers` (and host-only `peers`) in `getContext()`, optional `to` on `send`/`transfer`, `from` on host events, `peer_joined`/`peer_left`. Two-player works are unchanged. Older hosts reject any declaration other than `players: 2`, so keep a two-player build for them. No released host supports rooms yet.
+
+
+## 完整角色动作读取（未发布） / Complete animation reads (unreleased)
+
+新增 experimental `character.getAnimationCatalog()` 与 `character.getAnimation({state,variant?,offset?,limit?,signature?})`，在 tool/panel/block/HTML work 沿用 `character:read`。目录只含当前角色真实动作、全部变体、帧数/fps/loop/face 和文件可用状态；逐页返回原始 PNG/WebP，不给路径、插件归属、任意角色选择或宿主控制。目录签名固定所有帧修订；分页时传 signature，换角色/源帧变化返回 CHARACTER_ANIMATION_CHANGED。每页最多24帧、原始6MiB/单帧2MiB；跟随 nextOffset 读完。缺可选动作由游戏按语义回退，不得把读取授权解释为外观接管授权。
+
+Both methods are read-only and experimental under existing character:read. No appearance:render or arbitrary file access is granted. Availability describes metadata; image bytes are validated on each read. Probe capabilities before use; getCurrent still returns representative poses. No released minimum host version, npm publication, marketplace update or public host download is implied. Existing plugins.json remains unchanged until a real independently verified release exists.
