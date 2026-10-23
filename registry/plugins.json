@@ -20,7 +20,8 @@
         "scheduler"
       ],
       "nodeAccess": true,
-      "meshTier": null
+      "meshTier": null,
+      "description": "查看 AI 编程助手的任务进度，在任务完成或等待批准时提醒你。"
     },
     {
       "id": "feishu",
@@ -45,7 +46,8 @@
         "host:feishu"
       ],
       "nodeAccess": false,
-      "meshTier": null
+      "meshTier": null,
+      "description": "连接飞书日历和消息，提供会议提醒、日程管理与消息发送。"
     },
     {
       "id": "super-clipboard",
@@ -64,7 +66,8 @@
         "storage"
       ],
       "nodeAccess": false,
-      "meshTier": null
+      "meshTier": null,
+      "description": "保存和搜索文字、图片剪贴板历史，并通过桌宠发送给好友。"
     },
     {
       "id": "sword-shield-pilot",
@@ -82,7 +85,8 @@
         "pet"
       ],
       "nodeAccess": false,
-      "meshTier": null
+      "meshTier": null,
+      "description": "刀盾小狗自定义形象，包含 B 版串门打招呼、探头、收回等 11 个动作与外观预览面板。"
     }
   ]
 }

@@ -43,6 +43,7 @@ SDK 新方法的同步、权限与最低版本核对见 [SDK 同步与兼容核�
 | 字段 | 必填 | 说明 |
 |---|---|---|
 | `id` | 是 | 插件唯一 id，须与 zip 内 manifest 的 id 一致 |
+| `description` | 上架必填 | 从同版本插件 manifest 同步的一句话用途，单行纯文本，1–200 个 Unicode 码点。旧宿主忽略；新宿主缺失时显示未提供简介，不影响安装兼容。 |
 | `repo` | 是 | **必须公开**。release zip 必须由该 repo 的 CI 产出 |
 | `version` | 是 | 与 zip 内 manifest.version 一致 |
 | `minHostVersion` | 否 | 低于此宿主版本不安装 |
@@ -80,3 +81,9 @@ SDK 新方法的同步、权限与最低版本核对见 [SDK 同步与兼容核�
 缺省 false；只有 true 才参与，远端 plugins.json 不得代替已安装插件开启。
 现有 version/download/sha256/permissions/minHostVersion/apiVersion 字段承载候选与校验信息；
 此功能不新增 registry 开关、不升级 schemaVersion。关闭参与仍保留手动市场更新。
+
+## 简介同步 / Description synchronization
+
+由插件作者在 manifest.json 维护 description。维护者使用仓库根目录的 `npm run sync:description -- --id ID --ref FULL_COMMIT_SHA` 从已登记的 GitHub repo 读取 manifest；核对 ID/version 和简介后，加 `--write` 更新登记表。默认仅预览差异。元数据修订可以来自与已发布版本号相同的后续源码提交，但不得包含未发布功能的宣传；不修改旧 ZIP 或其摘要。安装不依赖简介字段。
+
+Maintain the purpose in the plugin manifest and import it from a reviewed full commit SHA in the registered repository. The command checks matching ID/version and updates only description. Same-version metadata corrections are allowed after reviewing that the copy describes the released functionality; do not replace release archives, hashes, versions or permissions. Old entries remain installable without descriptions.

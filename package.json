@@ -1,0 +1,9 @@
+{
+  "name": "pet-plugin-registry-checks",
+  "private": true,
+  "scripts": {
+    "sync:description": "node scripts/sync-description.cjs",
+    "test:descriptions": "node --test test/descriptions.cjs",
+    "test": "npm run test:descriptions"
+  }
+}

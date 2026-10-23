@@ -31,3 +31,17 @@ registry/
 SDK `apiVersion: 1` 包含已冻结与实验能力，完整定义见
 [pet-plugin-types](https://github.com/ShunyuYao/pet-plugin-types)。
 SDK 变更交付必须完成[同步与兼容核对](registry/SDK.md)，不能把外部类型对账的 SKIP 当作通过。
+
+## 同步用途简介 / Sync purpose descriptions
+
+Node.js 22+，无额外依赖。作者维护 manifest.description；登记时先预览，再写入并人工审阅 Git diff：
+
+```sh
+npm run sync:description -- --id PLUGIN_ID --ref FULL_COMMIT_SHA
+npm run sync:description -- --id PLUGIN_ID --ref FULL_COMMIT_SHA --write
+npm test
+```
+
+同步从登记 repo 的 GitHub Contents API 拉取固定提交的 manifest；只更新 description，ID/version 不匹配、缺简介或拉取失败都拒绝写入。`--manifest /absolute/path/manifest.json` 可用于本地候选验证，不能代替发布前的远端源码核对。新上架或更新须有一句话用途，旧宿主兼容。
+
+Requires Node.js 22+, no dependencies. Import a manifest from a reviewed immutable commit through the GitHub Contents API. Preview by default; `--write` changes description only. Failures, missing descriptions and mismatched IDs/versions leave the registry unchanged. `--manifest` supports local candidate previews; verify the public source before publishing. Run `npm test` and review the diff. This is metadata synchronization, not a plugin release or automatic publication.

@@ -160,3 +160,9 @@ Pre-release evidence: 84 hidden real-host marketplace/appearance checks and 168 
 新增 experimental `character.getAnimationCatalog()` 与 `character.getAnimation({state,variant?,offset?,limit?,signature?})`，在 tool/panel/block/HTML work 沿用 `character:read`。目录只含当前角色真实动作、全部变体、帧数/fps/loop/face 和文件可用状态；逐页返回原始 PNG/WebP，不给路径、插件归属、任意角色选择或宿主控制。目录签名固定所有帧修订；分页时传 signature，换角色/源帧变化返回 CHARACTER_ANIMATION_CHANGED。每页最多24帧、原始6MiB/单帧2MiB；跟随 nextOffset 读完。缺可选动作由游戏按语义回退，不得把读取授权解释为外观接管授权。
 
 Both methods are read-only and experimental under existing character:read. No appearance:render or arbitrary file access is granted. Availability describes metadata; image bytes are validated on each read. Probe capabilities before use; getCurrent still returns representative poses. No released minimum host version, npm publication, marketplace update or public host download is implied. Existing plugins.json remains unchanged until a real independently verified release exists.
+
+## 用途简介 / Purpose statement
+
+新上架和更新登记必须提供 manifest.description，并同步到登记表。简介说明用户能做什么，不用权限枚举、无意义占位或未发布能力代替。单行纯文本，最多 200 个 Unicode 码点；审核时与对应版本 README 和实际功能核对。
+
+New and updated listings require a one-line manifest.description, synchronized into the registry (up to 200 Unicode code points). Describe actual user-facing functionality, not permissions, placeholders or unreleased features. Review the copy against that version’s README and behavior.
