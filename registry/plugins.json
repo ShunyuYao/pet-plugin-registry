@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-23",
+  "updatedAt": "2026-10-27",
   "plugins": [
     {
       "id": "pet-agent-status",
@@ -28,14 +28,15 @@
       "name": "飞书",
       "author": "github:ShunyuYao",
       "repo": "ShunyuYao/pet-plugin-feishu",
-      "version": "1.1.0",
-      "minHostVersion": "0.21.0",
+      "version": "1.1.1",
+      "minHostVersion": "0.29.0",
       "apiVersion": 1,
-      "download": "https://github.com/ShunyuYao/pet-plugin-feishu/releases/download/v1.1.0/plugin.zip",
-      "sha256": "6c3293cf32d61b1e652ca0d886dc459b6d8515822b32c7345b3c4dfeb742b9eb",
+      "download": "https://github.com/ShunyuYao/pet-plugin-feishu/releases/download/v1.1.1/plugin.zip",
+      "sha256": "a116d0c68723531e5be487c028f9a2e13bd18cd634799cfd02544cfbab81dd14",
       "permissions": [
         "net:open.feishu.cn",
         "net:accounts.feishu.cn",
+        "net:login.feishu.cn",
         "net:passport.feishu.cn",
         "secrets",
         "scheduler",
