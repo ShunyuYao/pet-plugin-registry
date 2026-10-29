@@ -190,3 +190,10 @@ Tool-only service providers require a manifest name and method allowlist; authen
 工具调用的第二参现为只读 `ToolInvocationContext`：`signal`、`source: 'chat' | 'plugin-task' | 'host'`、可选 `aiTaskId`。source 由真实宿主执行入口赋值，工具 args 中的同名字段无效；仅 plugin-task 带 ai.start 生成的任务 ID。chat 代表主对话路径，其他／未知宿主调用标为 host；来源标签本身不构成外部写授权。插件须将后台任务 ID 绑定本业务策略，避免前后台并发共用全局授权和作业集合。
 
 The read-only tool invocation context carries a host-authenticated source and optional background task ID. Arguments cannot forge it. It identifies the execution path, not user approval for arbitrary writes.
+
+
+## 完成结果交付主聊天（实验，未发布）
+
+`ai.deliver(id)` 仅 tool，复用 `ai` 权限，只可交付所属插件在当前账号/宠物下已完成任务的真实文本。宿主生成消息角色、线程、身份及稳定 ID；不开放任意消息写入。默认后台执行继续静默。插件仅在用户请求的最终阶段交付，不能把排队、等待素材或自动巡视当成主人聊天回复；中途取消、切换身份、停用及卸载须丢弃迟到结果。重复或并发交付不能重复写消息，不能伪造主人发言，不能额外消耗一次模型调用。刷新已打开聊天，不自动弹出聊天窗口。
+
+Completed-result delivery is tool-only under the existing ai permission. Only an owned, completed real result for the current identity may be delivered. The host owns message fields and idempotency; arbitrary messages, fabricated user turns and stale lifecycle delivery are forbidden. Default background execution stays silent. No extra model call, auto-opened chat, published host support or marketplace release is implied.

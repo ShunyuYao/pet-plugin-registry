@@ -197,6 +197,11 @@ prompt 最长 24000 字；options 可带 `images`（最多 4 张 PNG/JPEG/WebP d
 
 start立即返回 `{id,status,text?,error?}`；status 为 queued/running/completed/failed/cancelled。每插件只有一个在途任务，每60秒最多10次启动，取消后排空才可重入。结果内存保存，最多20条/30分钟；重启不重放任务，也不能自动重试结果不明的外部写操作。后台经历摘要进入同宠物记忆，标记插件来源并从主人聊天列表隐藏。
 
+
+`pet.ai.deliver(id): Promise<boolean>` 仅 tool，沿用 `ai` 权限。它只把本插件、当前账号和宠物下已完成任务的真实最终文本交付到主聊天；不接受自定义文本、角色、线程或身份。成功及幂等重复交付返回 `true`，并发重试只保存一条真实 assistant 消息，不增加主人发言，也不额外调用模型。默认后台任务仍静默，插件应在素材和所有工具作业完成后显式交付最终阶段。保存后刷新已打开的聊天，关闭时不弹窗；已交付消息随聊天历史持久保存，重启不重放后台任务。排队持久化时切账号/宠物、取消或停用会拒绝迟到结果；对尚未交付的 completed 任务调用 cancel 会撤销交付，已提交的聊天消息不撤回。旧宿主须先探测 `deliver`；结果过期、未完成、非本人任务或无此能力时须明确反馈。
+
+`ai.deliver(id)` explicitly persists only an owned, completed real result into the current pet chat. It takes no arbitrary message fields, adds no user message or extra model call, and is idempotent. Background runs stay silent by default. It refreshes an open chat without opening a window; delivered history persists across restart, while jobs are never replayed. Probe this unreleased tool-only capability and reject stale lifecycle results.
+
 `pet.profile.getScope()` 仅 tool，需 `storage` 权限，返回不透明 `{scopeId,revision}`。scopeId稳定对应当前宿主账号和宠物，revision在切换后更新，切回也不能恢复旧任务。通过 `events` 权限订阅保留事件 `host:context-changed`；插件应按scopeId分开保存业务配置、加密仓键和文件目录，revision变化时取消旧工作、丢弃迟到结果。插件不能自行发出保留的宿主事件。旧storage/secrets方法仍按插件profile保存，不会自动完成业务分仓。
 
 These tool-only experimental APIs are unreleased. Probe capabilities and handle missing support; no npm publication, released minimum host version or marketplace compatibility is implied. Background runs retain the current pet identity and only selected plugin-owned tools. Images are bounded data URLs, never paths. Opaque profile scopes isolate business credentials and storage; scope revision changes cancel stale runs, including switch-away-and-back races. Existing templates retain their original permissions.
