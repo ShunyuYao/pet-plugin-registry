@@ -188,3 +188,24 @@ HTML-work-only `pet.sessions` now accepts `interaction.players` 2–4. Hosts of 
 新增 experimental `character.getAnimationCatalog()` 与 `character.getAnimation({state,variant?,offset?,limit?,signature?})`，在 tool/panel/block/HTML work 沿用 `character:read`。目录只含当前角色真实动作、全部变体、帧数/fps/loop/face 和文件可用状态；逐页返回原始 PNG/WebP，不给路径、插件归属、任意角色选择或宿主控制。目录签名固定所有帧修订；分页时传 signature，换角色/源帧变化返回 CHARACTER_ANIMATION_CHANGED。每页最多24帧、原始6MiB/单帧2MiB；跟随 nextOffset 读完。缺可选动作由游戏按语义回退，不得把读取授权解释为外观接管授权。
 
 Both methods are read-only and experimental under existing character:read. No appearance:render or arbitrary file access is granted. Availability describes metadata; image bytes are validated on each read. Probe capabilities before use; getCurrent still returns representative poses. No released minimum host version, npm publication, marketplace update or public host download is implied. Existing plugins.json remains unchanged until a real independently verified release exists.
+
+## 插件后台 AI 与身份作用域（实验，未发布）
+
+`pet.ai.start(prompt, options?)`、`get(id)`、`cancel(id)` 仅 tool 上下文，需 `ai` 权限。沿用当前宠物人设与账号/宠物记忆；工具列表只允许本插件已注册的名字，不开放宿主 shell、工作区或其他插件工具。`ai.chat` 保持原有兼容行为。
+
+prompt 最长 24000 字；options 可带 `images`（最多 4 张 PNG/JPEG/WebP data URL，编码合计 512 KiB）、`tools`（最多16个自有工具名）、`maxSteps`（默认8、范围1–32）、`timeoutMs`（默认180000、范围1000–600000）。禁止以文件路径或远端URL代替图片。工具可返回 `{text,images}`，图片实际进入模型附件；普通 JSON 结果保留原语义。模型本身须支持视觉，接口存在不代表所有供应商/档位支持图片。
+
+start立即返回 `{id,status,text?,error?}`；status 为 queued/running/completed/failed/cancelled。每插件只有一个在途任务，每60秒最多10次启动，取消后排空才可重入。结果内存保存，最多20条/30分钟；重启不重放任务，也不能自动重试结果不明的外部写操作。后台经历摘要进入同宠物记忆，标记插件来源并从主人聊天列表隐藏。
+
+`pet.profile.getScope()` 仅 tool，需 `storage` 权限，返回不透明 `{scopeId,revision}`。scopeId稳定对应当前宿主账号和宠物，revision在切换后更新，切回也不能恢复旧任务。通过 `events` 权限订阅保留事件 `host:context-changed`；插件应按scopeId分开保存业务配置、加密仓键和文件目录，revision变化时取消旧工作、丢弃迟到结果。插件不能自行发出保留的宿主事件。旧storage/secrets方法仍按插件profile保存，不会自动完成业务分仓。
+
+These tool-only experimental APIs are unreleased. Probe capabilities and handle missing support; no npm publication, released minimum host version or marketplace compatibility is implied. Background runs retain the current pet identity and only selected plugin-owned tools. Images are bounded data URLs, never paths. Opaque profile scopes isolate business credentials and storage; scope revision changes cancel stale runs, including switch-away-and-back races. Existing templates retain their original permissions.
+
+
+## 声明式服务和图片选择（实验，未发布）
+
+`services.provide(name, api)` 仅 tool，manifest 必须声明同名 `provides.service` 和 1–32 个唯一安全 `provides.methods`。宿主拒绝未声明方法和跨插件覆盖；新服务通过 `services.invoke` 传递宿主认证的 `sdkCaller`，旧 methods/call 通道不可绕过。保留未声明方法表的旧内置／已上架飞书兼容例外，不向普通新插件开放。
+
+`files.pick({kind:'file',accept:'images'})` 在 tool/panel 使用既有 files 权限，支持 PNG/JPEG/GIF/WebP。只有用户实际选中的绝对路径进入授权集；默认文档、目录和取消行为保留。UI 不能自报路径授权。工具 handler 第二参 `{signal}` 支持取消，激活清理最多等待 1 秒后终止进程。
+
+Tool-only service providers require a manifest name and method allowlist; authenticated services.invoke prevents caller forgery. Image picking extends the existing experimental file picker without granting arbitrary paths. Cancellation and bounded cleanup apply across tool processes. No released host support is implied.

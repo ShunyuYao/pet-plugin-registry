@@ -166,3 +166,22 @@ Both methods are read-only and experimental under existing character:read. No ap
 新上架和更新登记必须提供 manifest.description，并同步到登记表。简介说明用户能做什么，不用权限枚举、无意义占位或未发布能力代替。单行纯文本，最多 200 个 Unicode 码点；审核时与对应版本 README 和实际功能核对。
 
 New and updated listings require a one-line manifest.description, synchronized into the registry (up to 200 Unicode code points). Describe actual user-facing functionality, not permissions, placeholders or unreleased features. Review the copy against that version’s README and behavior.
+
+## 后台 AI 与本机媒体处理（实验，未发布）
+
+- 后台 AI 只能调用所属插件明确选择的工具，声明 `ai`；图片必须为有界字节内容，不能宣称仅返回路径即已看懂画面。
+- 切换宿主账号/宠物后取消旧任务，业务凭据、草稿和文件按profile scope分仓；保持B站等外部账号与原草稿绑定。凭据仍必须使用 `pet.secrets`，不得放入环境变量、配置、日志或临时文件。
+- 长下载、抽帧和实时连接须支持停止，停用/卸载回收进程及孙进程；不可整体放宽宿主工具超时。
+- FFmpeg等本机工具披露用途及 `nodeAccess:true`，随正式包分发时核对实际平台、架构、可执行权限、来源及对应许可；运行时不得自行拉取代码执行。
+- 本次只增加待发布能力的审核要求；没有实际发布包与宿主兼容验证前，不新增插件下载URL、摘要或最低宿主版本。
+
+Background AI and media workers require declared permissions, plugin-owned tool scopes, image bytes, identity-bound storage and cancellation. Audit bundled executables and their provenance with the release; never download executable code at plugin runtime. These policies do not announce a plugin or host release.
+
+
+## 声明式服务和图片选择（实验，未发布）
+
+`services.provide(name, api)` 仅 tool，manifest 必须声明同名 `provides.service` 和 1–32 个唯一安全 `provides.methods`。宿主拒绝未声明方法和跨插件覆盖；新服务通过 `services.invoke` 传递宿主认证的 `sdkCaller`，旧 methods/call 通道不可绕过。保留未声明方法表的旧内置／已上架飞书兼容例外，不向普通新插件开放。
+
+`files.pick({kind:'file',accept:'images'})` 在 tool/panel 使用既有 files 权限，支持 PNG/JPEG/GIF/WebP。只有用户实际选中的绝对路径进入授权集；默认文档、目录和取消行为保留。UI 不能自报路径授权。工具 handler 第二参 `{signal}` 支持取消，激活清理最多等待 1 秒后终止进程。
+
+Tool-only service providers require a manifest name and method allowlist; authenticated services.invoke prevents caller forgery. Image picking extends the existing experimental file picker without granting arbitrary paths. Cancellation and bounded cleanup apply across tool processes. No released host support is implied.
