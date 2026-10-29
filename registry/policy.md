@@ -185,3 +185,8 @@ Background AI and media workers require declared permissions, plugin-owned tool 
 `files.pick({kind:'file',accept:'images'})` 在 tool/panel 使用既有 files 权限，支持 PNG/JPEG/GIF/WebP。只有用户实际选中的绝对路径进入授权集；默认文档、目录和取消行为保留。UI 不能自报路径授权。工具 handler 第二参 `{signal}` 支持取消，激活清理最多等待 1 秒后终止进程。
 
 Tool-only service providers require a manifest name and method allowlist; authenticated services.invoke prevents caller forgery. Image picking extends the existing experimental file picker without granting arbitrary paths. Cancellation and bounded cleanup apply across tool processes. No released host support is implied.
+
+
+工具调用的第二参现为只读 `ToolInvocationContext`：`signal`、`source: 'chat' | 'plugin-task' | 'host'`、可选 `aiTaskId`。source 由真实宿主执行入口赋值，工具 args 中的同名字段无效；仅 plugin-task 带 ai.start 生成的任务 ID。chat 代表主对话路径，其他／未知宿主调用标为 host；来源标签本身不构成外部写授权。插件须将后台任务 ID 绑定本业务策略，避免前后台并发共用全局授权和作业集合。
+
+The read-only tool invocation context carries a host-authenticated source and optional background task ID. Arguments cannot forge it. It identifies the execution path, not user approval for arbitrary writes.
