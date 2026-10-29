@@ -3,6 +3,8 @@
 桌宠（吐梨邦）插件市场的登记表仓库。宿主从这里拉插件清单与黑名单——零服务器成本，
 照 Obsidian 的做法。
 
+想知道插件有什么用、上架后在哪里看到、如何安装或从文件夹导入？先看 [插件入门入口](https://github.com/ShunyuYao/create-pet-plugin)；本仓库负责市场登记与审核规则。
+
 ```
 registry/
   plugins.json     插件登记表
