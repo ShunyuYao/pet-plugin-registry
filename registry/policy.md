@@ -199,3 +199,11 @@ The read-only tool invocation context carries a host-authenticated source and op
 `ai.deliver(id)` 仅 tool，复用 `ai` 权限，只可交付所属插件在当前账号/宠物下已完成任务的真实文本。宿主生成消息角色、线程、身份及稳定 ID；不开放任意消息写入。默认后台执行继续静默。插件仅在用户请求的最终阶段交付，不能把排队、等待素材或自动巡视当成主人聊天回复；中途取消、切换身份、停用及卸载须丢弃迟到结果。重复或并发交付不能重复写消息，不能伪造主人发言，不能额外消耗一次模型调用。刷新已打开聊天，不自动弹出聊天窗口。
 
 Completed-result delivery is tool-only under the existing ai permission. Only an owned, completed real result for the current identity may be delivered. The host owns message fields and idempotency; arbitrary messages, fabricated user turns and stale lifecycle delivery are forbidden. Default background execution stays silent. No extra model call, auto-opened chat, published host support or marketplace release is implied.
+
+## Proactive result sharing (experimental, unreleased)
+
+`pet.ai.share(id): Promise<boolean>` is tool-only and requires both `ai` and `pet` permissions. It consumes an owned completed result in the current account/pet scope; callers cannot supply message text, role, identity or thread. It persists one assistant chat message, adds a scoped unread hub reference linking to that message, and shows an idle pet bubble without opening/focusing a window or another model call. The bubble is suppressed during foreground conversations or expanded chat.
+
+Concurrent/repeated share and deliver calls do not duplicate chat messages. Repeated sharing preserves hub read state and does not repeat the bubble. History and hub records survive restart without replaying jobs. Existing cancellation, context and plugin lifecycle guards apply. `ai.deliver` keeps its chat-only behavior. Feature-detect `typeof pet.ai.share === 'function'` and report unavailable support truthfully. No released host compatibility, npm publication or marketplace package update is claimed.
+
+Share only final discoveries from user-enabled autonomous tasks, never queued/skipped/failed/cancelled work. In-product sharing does not grant permission for external comments or messages.

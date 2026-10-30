@@ -227,3 +227,9 @@ manifest 与登记表可选声明相同的 `platforms` 非空白名单，值使�
 该通用检查已在 macOS arm64 的 `0.30.0` Test 源码运行环境完成隐藏 Electron 验证，类型和脚手架也已对实际宿主执行交付核对。这是源码候选的证据，不代表桌宠安装包或 npm SDK 已发布，不提供公开宿主下载入口。`nodeAccess` 仍为登记表的能力披露字段，不新增同名 manifest 要求；登记权限需包含 `services` 展开的 `service:<name>`。
 
 Optional platform allowlists must match between the package and registry. Native packages declare only built and verified platform/architecture pairs. The generic checks were verified in an isolated macOS arm64 Electron session using the 0.30.0 Test source candidate; this does not publish a host installer or npm SDK. Node access remains registry disclosure, and permissions include expanded service grants.
+
+## Proactive result sharing (experimental, unreleased)
+
+`pet.ai.share(id): Promise<boolean>` is tool-only and requires both `ai` and `pet` permissions. It consumes an owned completed result in the current account/pet scope; callers cannot supply message text, role, identity or thread. It persists one assistant chat message, adds a scoped unread hub reference linking to that message, and shows an idle pet bubble without opening/focusing a window or another model call. The bubble is suppressed during foreground conversations or expanded chat.
+
+Concurrent/repeated share and deliver calls do not duplicate chat messages. Repeated sharing preserves hub read state and does not repeat the bubble. History and hub records survive restart without replaying jobs. Existing cancellation, context and plugin lifecycle guards apply. `ai.deliver` keeps its chat-only behavior. Feature-detect `typeof pet.ai.share === 'function'` and report unavailable support truthfully. No released host compatibility, npm publication or marketplace package update is claimed.
