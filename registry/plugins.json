@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-27",
+  "updatedAt": "2026-10-30",
   "plugins": [
     {
       "id": "pet-agent-status",
@@ -88,6 +88,32 @@
       "nodeAccess": false,
       "meshTier": null,
       "description": "刀盾小狗自定义形象，包含 B 版串门打招呼、探头、收回等 11 个动作与外观预览面板。"
+    },
+    {
+      "id": "smzdm-helper",
+      "name": "值得买助手",
+      "author": "github:fengxi1998",
+      "repo": "fengxi1998/pet-plugin-smzdm-helper",
+      "version": "0.1.1",
+      "minHostVersion": "0.29.3",
+      "apiVersion": 1,
+      "download": "https://github.com/fengxi1998/pet-plugin-smzdm-helper/releases/download/v0.1.1/plugin.zip",
+      "sha256": "ea3f2bb5441f5bec1ed87c52682fd953d298a1dfdc9b7bd8ed248c2ef4699764",
+      "permissions": [
+        "storage",
+        "secrets",
+        "pet",
+        "ui",
+        "events",
+        "scheduler",
+        "tools",
+        "dashboard",
+        "ai",
+        "net:gw-openapi.zhidemai.com"
+      ],
+      "nodeAccess": true,
+      "meshTier": null,
+      "description": "好价搜索·降价监控·全网口碑：向 Agent 注册 4 个查询工具，早晨播报今日好价，关注的商品降价了冒泡提醒。需在面板里填写自己的什么值得买开放平台 Key。"
     }
   ]
 }
