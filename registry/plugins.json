@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-27",
+  "updatedAt": "2026-10-30",
   "plugins": [
     {
       "id": "pet-agent-status",
@@ -88,6 +88,65 @@
       "nodeAccess": false,
       "meshTier": null,
       "description": "刀盾小狗自定义形象，包含 B 版串门打招呼、探头、收回等 11 个动作与外观预览面板。"
+    },
+    {
+      "id": "bili",
+      "name": "B 站生活",
+      "description": "让当前宠物按作息浏览和理解 B 站视频、记录日记，并处理评论、主人私信、收藏与动态。",
+      "version": "0.1.0",
+      "minHostVersion": "0.30.0",
+      "apiVersion": 1,
+      "platforms": [
+        "darwin-arm64"
+      ],
+      "author": "github:xingxiang101",
+      "repo": "xingxiang101/pet-plugin-bili",
+      "download": "https://github.com/xingxiang101/pet-plugin-bili/releases/download/v0.1.0/bili-0.1.0.zip",
+      "sha256": "67e72ab7e7490b8f48e7b8ee69a9fac072a22f6235d5e4677aff93435bd0233a",
+      "permissions": [
+        "storage",
+        "secrets",
+        "scheduler",
+        "tools",
+        "ai",
+        "ui",
+        "pet",
+        "net:api.bilibili.com",
+        "net:passport.bilibili.com",
+        "net:api.vc.bilibili.com",
+        "net:api.live.bilibili.com",
+        "net:live.bilibili.com",
+        "net:www.bilibili.com",
+        "net:comment.bilibili.com",
+        "net:i0.hdslb.com",
+        "net:i1.hdslb.com",
+        "net:i2.hdslb.com",
+        "net:aisubtitle.hdslb.com",
+        "net:upos-sz-estgcos.bilivideo.com",
+        "net:upos-sz-mirrorcos.bilivideo.com",
+        "net:upos-sz-mirrorcosb.bilivideo.com",
+        "net:upos-sz-mirrorcoso1.bilivideo.com",
+        "net:upos-sz-mirrorcosov.bilivideo.com",
+        "net:upos-sz-mirrorali.bilivideo.com",
+        "net:upos-sz-mirroralib.bilivideo.com",
+        "net:upos-sz-mirroraliov.bilivideo.com",
+        "net:upos-sz-mirrorhw.bilivideo.com",
+        "net:upos-sz-mirrorhwb.bilivideo.com",
+        "net:upos-sz-mirrorhwfn.bilivideo.com",
+        "net:upos-sz-mirror08c.bilivideo.com",
+        "net:upos-sz-mirror08h.bilivideo.com",
+        "net:upos-sz-mirror08ct.bilivideo.com",
+        "net:upos-hz-mirrorakam.akamaized.net",
+        "net:broadcastlv.chat.bilibili.com",
+        "net:broadcast.chat.bilibili.com",
+        "net:api.github.com",
+        "net:raw.githubusercontent.com",
+        "events",
+        "files",
+        "service:bili-control"
+      ],
+      "nodeAccess": true,
+      "meshTier": null
     }
   ]
 }
