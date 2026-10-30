@@ -51,7 +51,7 @@ SDK 新方法的同步、权限与最低版本核对见 [SDK 同步与兼容核�
 | `apiVersion` | 否 | SDK 契约版本；缺省按最低兼容版本处理 |
 | `sha256` | 是 | zip 的校验和。**宿主先校验再解压** |
 | `permissions` | 是 | 完整登记 manifest 权限和由 `services` 展开的 `service:<name>`。**zip 内声明超出此处即拒装**（防过审后换包）；不能只复制 permissions 数组而漏掉服务授权 |
-| `nodeAccess` | 否 | 插件是否声明直接使用 Node 内建模块（policy.md 第 1 条，2026-09-10 起的声明披露制）。缺省按 `false`；`true` 时审核要求 README 披露用途，宿主安装弹窗按最坏情况措辞展示（宿主侧展示逻辑待落地，落地前旧宿主忽略该字段） |
+| `nodeAccess` | 否 | 插件是否声明直接使用 Node 内建模块（policy.md 第 1 条，2026-09-10 起的声明披露制）。缺省按 `false`；`true` 时审核要求 README 披露用途，支持此契约的宿主在市场安装、详情及更新确认中展示完全访问告知；旧宿主可能忽略该字段。这是登记表声明，不要求插件 manifest 添加同名字段 |
 | `meshTier` | 否 | 官方 relay 准入标记；`null` 表示不得使用官方 relay |
 
 ## blocklist.json（kill switch）
