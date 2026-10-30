@@ -51,6 +51,8 @@
 
 release 必须由公开 repo 的 CI 构建，zip 内容与 repo 源码一致（审核会抽查 diff）。
 
+随包本机程序必须在 manifest 和登记表声明相同的非空 `platforms`，只填写实际打包和验证的平台／架构。缺省保持旧插件不限平台行为。安装、更新、加载的平台检查需要支持此契约的宿主；最低宿主版本必须能排除不支持的旧构建，不能只增加会被旧比较器忽略的 internal 后缀。登记权限同时包含 `services` 展开的授权。Native executables require matching, build-verified platform allowlists and a real compatible host baseline. Include expanded service grants in registry permissions; a version suffix or new metadata alone does not make older hosts compatible.
+
 使用新增 SDK 时，类型、权限、最低宿主版本和实际可用上下文应同步核对，见
 [SDK 同步与兼容核对](SDK.md)。宿主 SDK 更新不能仅凭宿主测试通过就认定公开开发包已同步；
 交付前必须运行带真实宿主与类型包的对账，依赖缺失的 SKIP 不算通过。

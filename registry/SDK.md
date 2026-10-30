@@ -219,3 +219,11 @@ Tool-only service providers require a manifest name and method allowlist; authen
 工具调用的第二参现为只读 `ToolInvocationContext`：`signal`、`source: 'chat' | 'plugin-task' | 'host'`、可选 `aiTaskId`。source 由真实宿主执行入口赋值，工具 args 中的同名字段无效；仅 plugin-task 带 ai.start 生成的任务 ID。chat 代表主对话路径，其他／未知宿主调用标为 host；来源标签本身不构成外部写授权。插件须将后台任务 ID 绑定本业务策略，避免前后台并发共用全局授权和作业集合。
 
 The read-only tool invocation context carries a host-authenticated source and optional background task ID. Arguments cannot forge it. It identifies the execution path, not user approval for arbitrary writes.
+
+## 包的平台约束（0.30.0 Test 源码候选）
+
+manifest 与登记表可选声明相同的 `platforms` 非空白名单，值使用 Node 平台／架构组合，完整枚举见 [SCHEMA](SCHEMA.md)。缺省兼容原不限平台插件；支持此契约的宿主在安装、更新、加载及启用时检查，市场列表提供不兼容原因。随包本机程序只登记实际构建并验证的平台；最低宿主版本须排除不支持这些检查的旧构建，不能依赖被旧比较器忽略的 internal 后缀。
+
+该通用检查已在 macOS arm64 的 `0.30.0` Test 源码运行环境完成隐藏 Electron 验证，类型和脚手架也已对实际宿主执行交付核对。这是源码候选的证据，不代表桌宠安装包或 npm SDK 已发布，不提供公开宿主下载入口。`nodeAccess` 仍为登记表的能力披露字段，不新增同名 manifest 要求；登记权限需包含 `services` 展开的 `service:<name>`。
+
+Optional platform allowlists must match between the package and registry. Native packages declare only built and verified platform/architecture pairs. The generic checks were verified in an isolated macOS arm64 Electron session using the 0.30.0 Test source candidate; this does not publish a host installer or npm SDK. Node access remains registry disclosure, and permissions include expanded service grants.
