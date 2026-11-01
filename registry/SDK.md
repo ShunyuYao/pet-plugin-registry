@@ -227,3 +227,14 @@ manifest 与登记表可选声明相同的 `platforms` 非空白名单，值使�
 该通用检查已在 macOS arm64 的 `0.30.0` Test 源码运行环境完成隐藏 Electron 验证，类型和脚手架也已对实际宿主执行交付核对。这是源码候选的证据，不代表桌宠安装包或 npm SDK 已发布，不提供公开宿主下载入口。`nodeAccess` 仍为登记表的能力披露字段，不新增同名 manifest 要求；登记权限需包含 `services` 展开的 `service:<name>`。
 
 Optional platform allowlists must match between the package and registry. Native packages declare only built and verified platform/architecture pairs. The generic checks were verified in an isolated macOS arm64 Electron session using the 0.30.0 Test source candidate; this does not publish a host installer or npm SDK. Node access remains registry disclosure, and permissions include expanded service grants.
+
+
+## 状态通知与完成结果分享（实验）
+
+`pet.pet.notify({id,text,scope}): Promise<boolean>` 仅 tool，需要 `pet` 和 `storage` 权限。`id` 为插件内稳定事件 ID（1–128 字符）；`text` 是非空、最多 2000 字符的状态摘要；`scope` 是任务开始时捕获的 `profile.getScope()` 结果。宿主决定目标账号/宠物和消息角色，切换身份、停用或卸载会拒绝迟到通知。不要为旧任务重新获取新 scope。
+
+通知不调用模型，也不要求 AI 配置可用；保存为当前宠物聊天消息，在驿站保存同一消息的引用，并请求一次宠物气泡。重复/并发/重启后重报同一 ID 不改变已存正文、不重置已读、不再次冒泡。气泡沿用前台对话避让规则；true 表示持久通知被接受，不保证桌面当时可见。正常空轮询保持安静；任务完成、失败、待审和连续故障可汇报。不能将“AI 已生成”描述为“站外已发送”，不得包含凭据、原始日志或私人材料。
+
+`pet.ai.share(id): Promise<boolean>` 仅 tool，需要 `ai` 和 `pet`；将本插件已完成的真实 AI 结果同时送入聊天、驿站和气泡，复用 deliver 的幂等及取消边界。状态通知不应额外调用 AI 来生成固定文案。
+
+`pet.notify` 为本轮尚未发布能力，先检测 `typeof pet.pet?.notify === 'function'`。旧宿主可只显示 bubble，但必须明确无法保存到驿站，不可伪报完整交付。`apiVersion: 1`、类型包版本或文档更新均不证明目标宿主兼容。Status reporting is tool-only, scoped and idempotent; it does not call a model or grant authority for external actions. No host downloads or release compatibility are implied.
