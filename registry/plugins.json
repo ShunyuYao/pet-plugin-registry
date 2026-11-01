@@ -93,8 +93,8 @@
       "id": "bili",
       "name": "B 站生活",
       "description": "让当前宠物按作息浏览和理解 B 站视频、记录日记，并处理评论、主人私信、收藏与动态。",
-      "version": "0.2.0",
-      "minHostVersion": "0.30.0",
+      "version": "0.3.0",
+      "minHostVersion": "0.30.2",
       "apiVersion": 1,
       "platforms": [
         "darwin-arm64",
@@ -102,8 +102,8 @@
       ],
       "author": "github:xingxiang101",
       "repo": "xingxiang101/pet-plugin-bili",
-      "download": "https://github.com/xingxiang101/pet-plugin-bili/releases/download/v0.2.0/bili-0.2.0.zip",
-      "sha256": "0e7605fa38d5b08734bfe7bacc693f5523ea3cefeeb5d862fe753ec9803b34d9",
+      "download": "https://github.com/xingxiang101/pet-plugin-bili/releases/download/v0.3.0/bili-0.3.0.zip",
+      "sha256": "99c26f25d63e6684143d93e570dae136911079fe98707a90d1531935f24309ee",
       "permissions": [
         "storage",
         "secrets",
