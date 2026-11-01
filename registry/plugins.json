@@ -11,7 +11,7 @@
       "minHostVersion": "0.19.0",
       "apiVersion": 1,
       "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.13.3/plugin.zip",
-      "sha256": "d1e1f2e449b3d7ebf8749c64cefc67f07b5e8c238bec35616a80934c0f1cfc8a",
+      "sha256": "2b86675b2e396a4e138af7dcc8c4f29bc345f5dfbea36394e11a0ea2d86226de",
       "permissions": [
         "storage",
         "pet",
