@@ -253,3 +253,9 @@ await pet.pet.notify({
 通用消息接口已进入 0.30.2 macOS arm64 受邀渠道宿主；0.30.0/0.30.1 发布包不支持。Windows 需等待对应兼容宿主构建。仍应检测 `typeof pet.pet?.notify === 'function'`；旧宿主的 bubble 回退不保证聊天和驿站持久化，apiVersion 或类型包版本不能代替能力检查。本次仅同步源码文档，不代表 npm 包已发布。
 
 The generic tool-only message API accepts plugin-provided text without AI permission, an AI task ID, or a completed model result. It persists one chat message and hub reference and requests a bubble, enforcing scope, lifecycle and event deduplication. AI sharing is a convenience adapter over the same delivery channel. Per-plugin notification policy does not narrow the generic contract. The generic message API is available in the invitation-only macOS arm64 host 0.30.2; older releases lack it. Windows requires a matching compatible host build. No npm publication is implied.
+
+## External primary conversation (experimental, unreleased)
+
+The tool-only `conversation.bind/getBinding/unbind/changed` API requires `conversation` permission and a plugin-owned declared start/poll/history/cancel service. Binding changes the current account/pet's primary chat and history. Review must disclose remote processing, original-session continuity, source-specific replies, cancellation limits, and the persistent offline binding. Crash, disable, or removal must not silently select the local agent; explicit unbind restores it. Providers must separate owner/pet credentials, reject group/foreign requests unless explicitly supported, deduplicate events, and avoid automatic replay of unknown external outcomes. Bilibili or other integrations cannot be prerequisites for core chat.
+
+Feature-detect support. Source documentation does not establish a released minimum host version, npm version, plugin ZIP or marketplace listing. No registry entry changes in this update.
