@@ -200,6 +200,38 @@ The read-only tool invocation context carries a host-authenticated source and op
 
 Completed-result delivery is tool-only under the existing ai permission. Only an owned, completed real result for the current identity may be delivered. The host owns message fields and idempotency; arbitrary messages, fabricated user turns and stale lifecycle delivery are forbidden. Default background execution stays silent. No extra model call, auto-opened chat, published host support or marketplace release is implied.
 
+
+## 通用插件消息与 AI 结果分享（实验）
+
+`pet.pet.notify({id,text,scope}): Promise<boolean>` 是所有插件共用的文本消息入口。提醒、资料更新、业务摘要、状态、插件自己生成或取得的 AI 文本均可交付；不要求 AI 权限、不要求先创建 AI 任务，也不检查是否有 completed 结果。一次调用将消息保存到当前宠物聊天、在驿站关联同一条记录，并按既有避让规则请求气泡。它仅在 tool 上下文提供，需要 `pet` 和 `storage` 权限。
+
+`id` 是插件内稳定事件 ID（1–128 字符）；`text` 是非空文本（最多 128000 字符，与已有完整 AI 结果上限一致）；`scope` 是开始处理该事件时捕获的 `profile.getScope()` 结果。宿主决定目标身份、线程和消息角色。切换身份、停用或卸载会拒绝迟到消息，不应替旧事件重新获取新 scope。重复、并发及重启重报同一 ID 不改正文、不重置已读、不重复弹泡。true 表示持久消息已接受，气泡仍遵守前台交互避让，不保证当时可见。长正文在气泡中使用简短预览，聊天保留完整文本。
+
+```js
+const scope = await pet.profile.getScope();
+await pet.pet.notify({
+  id: 'library-update:2026-11-01',
+  text: '资料库新增三篇文章，主题是海洋生态。',
+  scope,
+});
+```
+
+消息是否需要通知、通知什么内容由插件按用户偏好决定。B 站「只提示结果和待处理事项」是该插件的策略，不限制通用接口只接收状态。插件负责内容真实性及权限，不泄露凭据，不把草稿或模型生成误报为已完成外部发送。
+
+`pet.pet.notify({id, scope, cancel: true})` 可取消本插件同一 scope 下尚在排队的消息（此时不传 text）：成功取消返回 true，已提交或没有待处理消息返回 false；不会撤回已保存内容。调用方必须同时停止重试该事件。取消同样受 SDK 调用预算约束。
+
+`pet.ai.share(id): Promise<boolean>` 是保留给旧插件的 AI 任务兼容入口，需要 `ai` 和 `pet` 权限；取出本插件已完成的真实结果后，复用同一条通用交付通道。新代码与已迁移业务调用应直接使用 `pet.pet.notify`，无需为了发送消息调用模型。`ai.deliver` 继续保留仅交付聊天的旧行为。
+
+通用消息接口已进入 0.30.2 macOS arm64 受邀渠道宿主；0.30.0/0.30.1 发布包不支持。Windows 需等待对应兼容宿主构建。仍应检测 `typeof pet.pet?.notify === 'function'`；旧宿主的 bubble 回退不保证聊天和驿站持久化，apiVersion 或类型包版本不能代替能力检查。本次仅同步源码文档，不代表 npm 包已发布。
+
+The generic tool-only message API accepts plugin-provided text without AI permission, an AI task ID, or a completed model result. It persists one chat message and hub reference and requests a bubble, enforcing scope, lifecycle and event deduplication. AI sharing is a convenience adapter over the same delivery channel. Per-plugin notification policy does not narrow the generic contract. The generic message API is available in the invitation-only macOS arm64 host 0.30.2; older releases lack it. Windows requires a matching compatible host build. No npm publication is implied.
+
+## External primary conversation (experimental, unreleased)
+
+The tool-only `conversation.bind/getBinding/unbind/changed` API requires `conversation` permission and a plugin-owned declared start/poll/history/cancel service. Binding changes the current account/pet's primary chat and history. Review must disclose remote processing, original-session continuity, source-specific replies, cancellation limits, and the persistent offline binding. Crash, disable, or removal must not silently select the local agent; explicit unbind restores it. Providers must separate owner/pet credentials, reject group/foreign requests unless explicitly supported, deduplicate events, and avoid automatic replay of unknown external outcomes. Bilibili or other integrations cannot be prerequisites for core chat.
+
+Feature-detect support. Source documentation does not establish a released minimum host version, npm version, plugin ZIP or marketplace listing. No registry entry changes in this update.
+
 ## Proactive result sharing (experimental, unreleased)
 
 `pet.ai.share(id): Promise<boolean>` is tool-only and requires both `ai` and `pet` permissions. It consumes an owned completed result in the current account/pet scope; callers cannot supply message text, role, identity or thread. It persists one assistant chat message, adds a scoped unread hub reference linking to that message, and shows an idle pet bubble without opening/focusing a window or another model call. The bubble is suppressed during foreground conversations or expanded chat.

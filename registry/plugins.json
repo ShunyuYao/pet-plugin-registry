@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-30",
+  "updatedAt": "2026-11-01",
   "plugins": [
     {
       "id": "pet-agent-status",
       "name": "Agent 会话状态",
       "author": "github:ShunyuYao",
       "repo": "ShunyuYao/pet-agent-status",
-      "version": "0.13.2",
+      "version": "0.13.3",
       "minHostVersion": "0.19.0",
       "apiVersion": 1,
-      "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.13.2/plugin.zip",
-      "sha256": "aee49f3977055f05efd7b2b8974e6a430aa04afa86f6183f11e1376d967286ef",
+      "download": "https://github.com/ShunyuYao/pet-agent-status/releases/download/v0.13.3/plugin.zip",
+      "sha256": "2b86675b2e396a4e138af7dcc8c4f29bc345f5dfbea36394e11a0ea2d86226de",
       "permissions": [
         "storage",
         "pet",
@@ -93,16 +93,17 @@
       "id": "bili",
       "name": "B 站生活",
       "description": "让当前宠物按作息浏览和理解 B 站视频、记录日记，并处理评论、主人私信、收藏与动态。",
-      "version": "0.1.0",
-      "minHostVersion": "0.30.0",
+      "version": "0.3.0",
+      "minHostVersion": "0.30.2",
       "apiVersion": 1,
       "platforms": [
-        "darwin-arm64"
+        "darwin-arm64",
+        "win32-x64"
       ],
       "author": "github:xingxiang101",
       "repo": "xingxiang101/pet-plugin-bili",
-      "download": "https://github.com/xingxiang101/pet-plugin-bili/releases/download/v0.1.0/bili-0.1.0.zip",
-      "sha256": "67e72ab7e7490b8f48e7b8ee69a9fac072a22f6235d5e4677aff93435bd0233a",
+      "download": "https://github.com/xingxiang101/pet-plugin-bili/releases/download/v0.3.0/bili-0.3.0.zip",
+      "sha256": "99c26f25d63e6684143d93e570dae136911079fe98707a90d1531935f24309ee",
       "permissions": [
         "storage",
         "secrets",
