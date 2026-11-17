@@ -239,3 +239,7 @@ Feature-detect support. Source documentation does not establish a released minim
 Concurrent/repeated share and deliver calls do not duplicate chat messages. Repeated sharing preserves hub read state and does not repeat the bubble. History and hub records survive restart without replaying jobs. Existing cancellation, context and plugin lifecycle guards apply. `ai.deliver` keeps its chat-only behavior. Feature-detect `typeof pet.ai.share === 'function'` and report unavailable support truthfully. No released host compatibility, npm publication or marketplace package update is claimed.
 
 Share only final discoveries from user-enabled autonomous tasks, never queued/skipped/failed/cancelled work. In-product sharing does not grant permission for external comments or messages.
+
+### Desktop panel candidates
+
+桌面悬浮插件须验证窗口不抢焦点、可移动/缩放、关闭后后台行为、停用后清理和透明区域鼠标恢复。隐藏 Electron E2E 不能证明实际 OS 穿透和跨 Space 行为。未验证兼容的已发布宿主前，不登记猜测的 minHostVersion、下载地址或摘要；候选包与市场上架分开交付。Desktop-panel source compatibility is not released-host compatibility.
