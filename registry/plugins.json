@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-01",
+  "updatedAt": "2026-11-20",
   "plugins": [
     {
       "id": "pet-agent-status",
@@ -147,6 +147,26 @@
         "service:bili-control"
       ],
       "nodeAccess": true,
+      "meshTier": null
+    },
+    {
+      "id": "nixie-clock",
+      "name": "辉光管时钟",
+      "description": "透明桌面辉光管时钟，支持时区、大小和后台提醒；当前已发布宿主不兼容，等待兼容版本。",
+      "version": "0.2.0",
+      "minHostVersion": "0.33.0",
+      "apiVersion": 1,
+      "author": "github:ShunyuYao",
+      "repo": "ShunyuYao/pet-nixie-clock",
+      "download": "https://github.com/ShunyuYao/pet-nixie-clock/releases/download/v0.2.0/nixie-clock-0.2.0.zip",
+      "sha256": "c50577001777456c0e2318e951df16d15a46e0d690111e52fece273cad44d97e",
+      "permissions": [
+        "ui",
+        "storage",
+        "scheduler",
+        "pet"
+      ],
+      "nodeAccess": false,
       "meshTier": null
     }
   ]
