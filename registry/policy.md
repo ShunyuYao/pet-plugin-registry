@@ -243,3 +243,5 @@ Share only final discoveries from user-enabled autonomous tasks, never queued/sk
 ### Desktop panel candidates
 
 桌面悬浮插件须验证窗口不抢焦点、可移动/缩放、关闭后后台行为、停用后清理和透明区域鼠标恢复。隐藏 Electron E2E 不能证明实际 OS 穿透和跨 Space 行为。未验证兼容的已发布宿主前，不登记猜测的 minHostVersion、下载地址或摘要；候选包与市场上架分开交付。Desktop-panel source compatibility is not released-host compatibility.
+
+2026-11-20 维护者对 `nixie-clock` 明确授权先上架插件，不在本轮发布配套宿主；本项覆盖该插件的上述发布先后限制。简介和 Release 必须显著说明当前已发布宿主不兼容，版本门槛预留为 0.33.0 以禁用现有版本中的插件，且不得描述为已发布或已验证的兼容宿主版本。旧宿主可能允许下载后安装，但必须禁用并显示版本原因；插件还须检查实际桌面窗口接口，缺失时明确报不兼容且不启动后台任务。后续宿主实际发版后再验证并更新兼容说明；不扩大为其他插件或公开宿主下载的授权。
