@@ -245,3 +245,7 @@ Share only final discoveries from user-enabled autonomous tasks, never queued/sk
 桌面悬浮插件须验证窗口不抢焦点、可移动/缩放、关闭后后台行为、停用后清理和透明区域鼠标恢复。隐藏 Electron E2E 不能证明实际 OS 穿透和跨 Space 行为。未验证兼容的已发布宿主前，不登记猜测的 minHostVersion、下载地址或摘要；候选包与市场上架分开交付。Desktop-panel source compatibility is not released-host compatibility.
 
 2026-11-20 维护者对 `nixie-clock` 明确授权先上架插件，不在本轮发布配套宿主；本项覆盖该插件的上述发布先后限制。简介和 Release 必须显著说明当前已发布宿主不兼容，版本门槛预留为 0.33.0 以禁用现有版本中的插件，且不得描述为已发布或已验证的兼容宿主版本。旧宿主可能允许下载后安装，但必须禁用并显示版本原因；插件还须检查实际桌面窗口接口，缺失时明确报不兼容且不启动后台任务。后续宿主实际发版后再验证并更新兼容说明；不扩大为其他插件或公开宿主下载的授权。
+
+2026-11-20 后续验证：维护者已另行授权兼容宿主发布。macOS Apple Silicon 正式宿主 0.33.0 已完成签名、公证、时钟 0.2.0 的实际安装包验收及线上发布校验。对该已验证构建，0.33.0 不再只是预留门槛；同步简介和兼容说明，保持原插件版本、下载包、摘要和权限不变。其他平台不据此宣称已验证，旧宿主继续显示不兼容，宿主公开分发限制不变。
+
+The subsequently authorized macOS Apple Silicon host 0.33.0 has passed signing, notarization, real Nixie Clock 0.2.0 acceptance and publication verification. Metadata may now state that verified compatibility. Existing plugin archives and permissions remain unchanged; other platforms require corresponding evidence and host downloads remain private.

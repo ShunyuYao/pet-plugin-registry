@@ -266,8 +266,8 @@ Feature-detect support. Source documentation does not establish a released minim
 
 Concurrent/repeated share and deliver calls do not duplicate chat messages. Repeated sharing preserves hub read state and does not repeat the bubble. History and hub records survive restart without replaying jobs. Existing cancellation, context and plugin lifecycle guards apply. `ai.deliver` keeps its chat-only behavior. Feature-detect `typeof pet.ai.share === 'function'` and report unavailable support truthfully. No released host compatibility, npm publication or marketplace package update is claimed.
 
-## 桌面常驻面板（experimental，未发布）
+## 桌面常驻面板（experimental，macOS 宿主 0.33.0）
 
-`entry.panel.desktop:true` 必须同时声明 `transparent:true`。ui 权限下，tool/panel 增加 `getPanelBounds()`、`setPanelBounds({x?,y?,width?,height?})`、`setPanelHitRegions(Rect[]|null)`。坐标为 DIP，窗口尺寸 64–2000，按工作区夹紧并在重开时恢复位置。命中区为最多 64 个本地矩形；[] 穿透整窗，null 恢复接收。只能控制本插件自己的窗口，关闭/停用/崩溃释放轮询。普通面板与 block/render/work 不扩面。必须 feature detect；源码同步不代表 npm 或兼容宿主已发布，当前不声明最低发行版。
+`entry.panel.desktop:true` 必须同时声明 `transparent:true`。ui 权限下，tool/panel 增加 `getPanelBounds()`、`setPanelBounds({x?,y?,width?,height?})`、`setPanelHitRegions(Rect[]|null)`。坐标为 DIP，窗口尺寸 64–2000，按工作区夹紧并在重开时恢复位置。命中区为最多 64 个本地矩形；[] 穿透整窗，null 恢复接收。只能控制本插件自己的窗口，关闭/停用/崩溃释放轮询。普通面板与 block/render/work 不扩面。必须 feature detect；2026-11-20 已在签名、公证的 macOS Apple Silicon 正式宿主 0.33.0 中验证时钟插件安装、原生几何、后台提醒与重启恢复。旧宿主不兼容，其他平台需要相应构建；宿主仍限受邀测试渠道，此次文档同步不表示 npm 发布。
 
-Desktop panels are experimental and unreleased. Transparent desktop surfaces support bounded own-window geometry and mouse hit regions through ui permission in tool/panel only. No host distribution or marketplace compatibility is implied by this documentation.
+Desktop panels remain experimental and were verified with the signed and notarized macOS Apple Silicon host 0.33.0 on 2026-11-20. Transparent desktop surfaces support bounded own-window geometry and mouse hit regions through ui permission in tool/panel only. Older hosts remain incompatible; other platforms require a matching build. No npm publication or public host distribution is implied.
